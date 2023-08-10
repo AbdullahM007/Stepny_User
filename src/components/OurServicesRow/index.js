@@ -1,5 +1,5 @@
 
-import {View, Text,Image} from 'react-native';
+import {View, Text,Image,Pressable} from 'react-native';
 import React from 'react';
 import styles from './styles';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -8,7 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 
 const OurServicesRow = (props) => {
-    const {type} = props;
+    const {type,onPress,isSelected} = props;
     const getImage =()=>
   {
     if (type.type === 'Mechanic'){
@@ -24,7 +24,7 @@ const OurServicesRow = (props) => {
 
   }
   return (
-    <View style={styles.container}>
+    <Pressable onPress={onPress} style={[styles.container,{backgroundColor:isSelected ?'#efefef':'white',} ]}>
       {/* Images */}
       <Image style={styles.image} source={getImage()} />
       <View style={styles.middleContainer}>
@@ -39,7 +39,7 @@ const OurServicesRow = (props) => {
 
       </View>
       
-    </View>
+    </Pressable>
   );
 };
 export default OurServicesRow;

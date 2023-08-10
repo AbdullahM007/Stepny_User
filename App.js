@@ -18,6 +18,7 @@ navigator.geolocation = require('@react-native-community/geolocation');
 
  import { Amplify } from 'aws-amplify';
  import awsExports from './aws-exports';
+import RootNavigator from './src/Navigation/Root';
  Amplify.configure(awsExports);
 
 
@@ -30,9 +31,9 @@ const App = () => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-          title: 'Stepney App Camera Permission',
+          title: 'Stepney App Location Permission',
           message:
-            'Stepney App needs access to your camera ' +
+            'Stepney App needs access to your Location ' +
             'so you can take our awesome services.',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
@@ -45,7 +46,7 @@ const App = () => {
         console.log('Location permission denied');
       }
     } catch (err) {
-      console.warn(err);
+      console.warn('Error requesting location permission:', err);
     }
   }
   useEffect(()=>{ //For Android
@@ -63,7 +64,7 @@ const App = () => {
       <SafeAreaProvider>
         
 
-      <Router/>
+      <RootNavigator/>
       
 
       </SafeAreaProvider>
