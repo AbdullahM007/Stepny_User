@@ -63,7 +63,7 @@ export const HomeMap = (props) => {
       <MapView
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '125%' }}
         region={{
           // Current Display Setting on screen
           latitude: 32.239815,
