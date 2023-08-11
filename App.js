@@ -1,32 +1,26 @@
 import 'react-native-gesture-handler';
-import React,{useEffect} from 'react';
-import {StatusBar,PermissionsAndroid,View} from 'react-native';
+import React, {useEffect} from 'react';
+import {StatusBar, PermissionsAndroid, View} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import DestinationSearchScreen from './src/screens/DestinationSearchScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import SearchResultScreen from './src/screens/SearchResultScreen';
 import SplashScreen from './src/screens/SplashScreen/SplashScreen';
-import Router from './src/Navigation/Root'
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Router from './src/Navigation/Root';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Intro from './src/components/HomeIntro/Intro';
-import { withAuthenticator, useAuthenticator } from 'aws-amplify-react-native'
-
-
-
+import {withAuthenticator, useAuthenticator} from 'aws-amplify-react-native';
 
 navigator.geolocation = require('@react-native-community/geolocation');
 
- import { Amplify } from 'aws-amplify';
- import awsExports from './aws-exports';
+//  import { Amplify } from 'aws-amplify';
+// import awsExports from './aws-exports';
 import RootNavigator from './src/Navigation/Root';
- Amplify.configure(awsExports);
-
+//  Amplify.configure(awsExports);
 
 const App = () => {
-  
-
   // for location permission
-  const androidPermission = async () =>{
+  const androidPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -48,25 +42,23 @@ const App = () => {
     } catch (err) {
       console.warn('Error requesting location permission:', err);
     }
-  }
-  useEffect(()=>{ //For Android
-    if(Platform.OS === 'android'){androidPermission();} else //For IOS
-    { Geolocation.requestAuthorization(); }
-  },[])
+  };
+  useEffect(() => {
+    //For Android
+    if (Platform.OS === 'android') {
+      androidPermission();
+    } //For IOS
+    else {
+      Geolocation.requestAuthorization();
+    }
+  }, []);
 
-
-    
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      
-      
+
       <SafeAreaProvider>
-        
-
-      <RootNavigator/>
-      
-
+        <RootNavigator />
       </SafeAreaProvider>
     </>
   );
