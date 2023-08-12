@@ -19,6 +19,7 @@ navigator.geolocation = require('@react-native-community/geolocation');
 import RootNavigator from './src/Navigation/Root';
 import HomeNavigator from './src/Navigation/Home';
 import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 //  Amplify.configure(awsExports);
 
 const App = () => {
@@ -56,12 +57,18 @@ const App = () => {
     }
   }, []);
 
+  const Stack = createStackNavigator();
+
   return (
     <>
       <StatusBar barStyle="white-content" />
       <Provider store={store}>
         <NavigationContainer>
-          <RootNavigator />
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen name="Homes" component={HomeNavigator} />
+            {/* <Stack.Screen name="RootNavigator" component={RootNavigator} /> */}
+          </Stack.Navigator>
+          {/* <RootNavigator /> */}
         </NavigationContainer>
       </Provider>
     </>
