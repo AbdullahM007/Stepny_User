@@ -10,12 +10,15 @@ import Router from './src/Navigation/Root';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Intro from './src/components/HomeIntro/Intro';
 import {withAuthenticator, useAuthenticator} from 'aws-amplify-react-native';
-
+import {Provider} from 'react-redux';
+import {store} from './src/ReduxTollKit/store';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 //  import { Amplify } from 'aws-amplify';
 // import awsExports from './aws-exports';
 import RootNavigator from './src/Navigation/Root';
+import HomeNavigator from './src/Navigation/Home';
+import {NavigationContainer} from '@react-navigation/native';
 //  Amplify.configure(awsExports);
 
 const App = () => {
@@ -55,11 +58,12 @@ const App = () => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-
-      <SafeAreaProvider>
-        <RootNavigator />
-      </SafeAreaProvider>
+      <StatusBar barStyle="white-content" />
+      <Provider store={store}>
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      </Provider>
     </>
   );
 };
