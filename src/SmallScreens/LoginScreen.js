@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Image,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +17,7 @@ const LoginScreen = () => {
   const handleLogin = () => {
     // Add login logic here using APIs, authentication, etc.
     // For simplicity, we're just navigating to the SignUp screen.
-    navigation.navigate('Home');
+    navigation.navigate('RootNavigator');
   };
 
   const handleForgotPassword = () => {
@@ -21,32 +28,47 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Image
+        style={{
+          width: 150,
+          height: 150,
+          marginBottom: 20,
+          // borderRadius: 300,
+          resizeMode: 'cover',
+        }}
+        source={require('../assets/Images/electric-car.png')}
+      />
+
       <TextInput
         style={styles.input}
         placeholder="Email"
         placeholderTextColor="#000" // Set the placeholder text color to black
         value={email}
-        onChangeText={(text) => setEmail(text)}
+        onChangeText={text => setEmail(text)}
       />
+
       <TextInput
         style={styles.input}
         placeholder="Password"
         placeholderTextColor="#000" // Set the placeholder text color to black
         secureTextEntry={true}
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={text => setPassword(text)}
       />
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.signupButton}
-        onPress={() => navigation.navigate('SignUp')}
-      >
+        onPress={() => navigation.navigate('SignUp')}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.forgotPasswordButton} onPress={handleForgotPassword}>
-        <Text style={styles.buttonText}>Forgot Password?</Text>
+      <TouchableOpacity
+        style={styles.forgotPasswordButton}
+        onPress={handleForgotPassword}>
+        <Text style={[styles.buttonText, {color: 'orange', fontSize: 12}]}>
+          Forgot Password?
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -57,21 +79,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: 'black',
+    padding: 10,
+    backgroundColor: 'white',
   },
   input: {
-    width: '80%',
+    width: '90%',
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
+    marginTop: 10,
     marginBottom: 10,
+    borderRadius: 10,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
     color: '#000', // Set the text color to black
   },
   loginButton: {
-    width: '80%',
+    width: '90%',
     backgroundColor: '#007AFF',
     padding: 12,
     alignItems: 'center',
@@ -79,7 +103,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   signupButton: {
-    width: '80%',
+    width: '90%',
     backgroundColor: '#34C759',
     padding: 12,
     alignItems: 'center',
@@ -87,7 +111,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   forgotPasswordButton: {
-    width: '80%',
+    width: '90%',
     padding: 12,
     alignItems: 'center',
     marginBottom: 10,

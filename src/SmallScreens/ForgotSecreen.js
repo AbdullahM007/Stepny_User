@@ -1,5 +1,14 @@
-import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
+} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ForgotScreen = () => {
@@ -21,18 +30,32 @@ const ForgotScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <Image
+        style={{
+          width: 150,
+          height: 150,
+          marginBottom: 20,
+          // borderRadius: 300,
+          resizeMode: 'cover',
+        }}
+        source={require('../assets/Images/electric-car.png')}
+      />
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.emailInput}
           placeholder="Email"
           placeholderTextColor={'black'}
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={text => setEmail(text)}
           keyboardType="email-address"
           autoCapitalize="none"
         />
-        <TouchableOpacity style={styles.verifyButton} onPress={handleVerifyEmail}>
+        <TouchableOpacity
+          style={styles.verifyButton}
+          onPress={handleVerifyEmail}>
           <AntDesign name="check" size={20} color="#fff" />
           <Text style={styles.verifyButtonText}>Verify Email</Text>
         </TouchableOpacity>
@@ -42,7 +65,9 @@ const ForgotScreen = () => {
         placeholder="OTP"
         placeholderTextColor={'black'}
         value={otp}
-        onChangeText={(text) => setOtp(text.replace(/[^0-9]/g, '').substring(0, 6))}
+        onChangeText={text =>
+          setOtp(text.replace(/[^0-9]/g, '').substring(0, 6))
+        }
         keyboardType="numeric"
       />
       <TextInput
@@ -51,7 +76,7 @@ const ForgotScreen = () => {
         placeholderTextColor={'black'}
         secureTextEntry={true}
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={text => setPassword(text)}
       />
       <TextInput
         style={styles.input}
@@ -59,7 +84,7 @@ const ForgotScreen = () => {
         placeholderTextColor={'black'}
         secureTextEntry={true}
         value={confirmPassword}
-        onChangeText={(text) => setConfirmPassword(text)}
+        onChangeText={text => setConfirmPassword(text)}
       />
       <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Reset Password</Text>
@@ -73,11 +98,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
+    backgroundColor: 'white',
   },
   inputContainer: {
-    width: '80%',
+    width: '90%',
     flexDirection: 'row',
+    borderRadius: 10,
     borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 10,
@@ -89,19 +115,22 @@ const styles = StyleSheet.create({
   emailInput: {
     flex: 1,
     height: 40,
+
     paddingHorizontal: 10,
   },
   verifyButton: {
     backgroundColor: '#007AFF',
     padding: 10,
     borderRadius: 20,
-    flexDirection:'row'
+    flexDirection: 'row',
   },
   input: {
-    width: '80%',
+    width: '90%',
     height: 40,
+    borderRadius: 10,
     borderColor: '#ccc',
     borderWidth: 1,
+    marginTop: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
     backgroundColor: '#fff',

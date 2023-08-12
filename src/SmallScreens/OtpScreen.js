@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+import {useOtpConfirmationMutation} from '../ReduxTollKit/Stepney/stepney';
+import {useNavigation} from '@react-navigation/native';
+import OtpInputs from 'react-native-otp-inputs';
 
-const OTPScreen = () => {
-  const [otp, setOtp] = useState('');
-
-  const handleOTPChange = (text) => {
+const OTPScreen = ({route}) => {
+  const [
+    otpConfirmation, // This is the mutation trigger
+    {data, error, isLoading: isUpdating}, // This is the destructured mutation result
+  ] = useOtpConfirmationMutation();
+  const navigation = useNavigation();
+  const [otp, setOtp] = useState(0);
+  const otpValue = route?.params;
+  console.log('OTPVALUE', otpValue?.email);
+  const handleOTPChange = text => {
     // Remove non-numeric characters from the input
     const numericOTP = text.replace(/[^0-9]/g, '');
 
@@ -17,32 +32,58 @@ const OTPScreen = () => {
 
   const handleBackspace = () => {
     // Remove the last digit and spaces (if any) when the backspace is pressed
-    setOtp((prevOtp) => prevOtp.replace(/\d?\s?$/, ''));
+    setOtp(prevOtp => prevOtp.replace(/\d?\s?$/, ''));
   };
 
   const handleVerifyOTP = () => {
+    if (otp) {
+      otpConfirmation({email: otpValue?.email, otp: parseInt(otp)});
+    }
     // Implement the logic for verifying the OTP here
     console.log('Verifying OTP:', otp);
     // Add your logic to validate the OTP and navigate to the next screen if it's correct
   };
+  React.useEffect(() => {
+    if (data) {
+      navigation.navigate('RootNavigator');
+    }
+  }, [data]);
+  console.log('DFASDFASD', data, error, otp);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Enter OTP</Text>
-      <View style={styles.otpContainer}>
+      <View style={{height: 100}}>
+        <OtpInputs
+          handleChange={code => setOtp(code)}
+          numberOfInputs={4}
+          inputStyles={{
+            height: 60,
+            width: 50,
+            borderWidth: 2,
+            color: '#0A0A0A',
+            marginEnd: 10,
+            borderRadius: 10,
+            fontSize: 26,
+            borderColor: 'rgba(10, 10, 10, 0.2)',
+          }}
+          // style={{backgroundColor: 'green'}}
+        />
+      </View>
+      {/* <View style={styles.otpContainer}>
         <TextInput
           style={styles.otpInput}
           keyboardType="numeric"
-          maxLength={13} // Considering there will be 6 digits and 7 spaces (e.g., "1  2  3  4  5  6")
+          maxLength={10} // Considering there will be 6 digits and 7 spaces (e.g., "1  2  3  4  5  6")
           value={otp}
           onChangeText={handleOTPChange}
-          onKeyPress={({ nativeEvent }) => {
+          onKeyPress={({nativeEvent}) => {
             if (nativeEvent.key === 'Backspace') {
               handleBackspace();
             }
           }}
         />
-      </View>
+      </View> */}
       <TouchableOpacity style={styles.verifyButton} onPress={handleVerifyOTP}>
         <Text style={styles.verifyButtonText}>Verify OTP</Text>
       </TouchableOpacity>
@@ -55,13 +96,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'black'
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: 'white'
+    color: 'black',
   },
   otpContainer: {
     flexDirection: 'row',
@@ -71,7 +112,7 @@ const styles = StyleSheet.create({
   },
   otpInput: {
     borderWidth: 1,
-    color: 'white',
+    color: 'black',
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 15,
