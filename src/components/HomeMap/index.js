@@ -100,7 +100,7 @@ export const HomeMap = props => {
       navigation.navigate('MechanicReviewScreen', {mechaData: allFeedBack});
     }
   }, [allFeedBack]);
-
+  console.log('allFeedBack', allFeedBack);
   return (
     <View>
       <MapView
@@ -172,18 +172,21 @@ export const HomeMap = props => {
                   Review
                 </Text>
               </TouchableOpacity>
-              {/* <TouchableOpacity > */}
-              <Text
-                style={{
-                  backgroundColor:
-                    selectedMarker?.status === true ? 'green' : 'yellow',
-                  borderRadius: 10,
-                  color: selectedMarker?.statue === true ? 'white' : 'black',
-                  padding: 6,
-                }}>
-                {selectedMarker?.status === false ? 'Unavailable' : 'Available'}
-              </Text>
-              {/* </TouchableOpacity> */}
+              <TouchableOpacity
+                onPress={() => navigation.navigate('SearchResultScreen')}>
+                <Text
+                  style={{
+                    backgroundColor:
+                      selectedMarker?.status === true ? 'green' : 'yellow',
+                    borderRadius: 10,
+                    color: selectedMarker?.statue === true ? 'white' : 'black',
+                    padding: 6,
+                  }}>
+                  {selectedMarker?.status === false
+                    ? 'Unavailable'
+                    : 'Available'}
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
 
