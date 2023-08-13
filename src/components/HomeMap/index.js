@@ -1,37 +1,53 @@
-import React, { useState } from 'react'
-import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
-import MapView, {PROVIDER_GOOGLE,Marker} from 'react-native-maps';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import cars from '../../assets/data/cars';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
+import {
+  useGetAllFeedBackQuery,
+  useGetAllMechanicsQuery,
+} from '../../ReduxTollKit/Stepney/stepneyUser';
+export const HomeMap = props => {
+  const {
+    data: AllMechanics,
+    error: mechanicError,
+    isLoading: MechanicLoading,
+  } = useGetAllMechanicsQuery(1);
+  const [userId, setuserId] = useState();
+  const {
+    data: allFeedBack,
+    error: feedBackError,
+    isLoading: feedBackLoading,
+  } = useGetAllFeedBackQuery({id: userId});
+  // console.log('GET ALLMechanics', allFeedBack, feedBackError);
 
-
-
-
-export const HomeMap = (props) => {
-
-  
   const navigation = useNavigation();
   const handleHireButtonPress = () => {
     // Navigate to the desired screen here
     navigation.navigate('DestinationSearchScreen'); // Replace 'DestinationScreen' with the name of the screen you want to navigate to
   };
-  
-  const getImage =(type)=>
-  {
-    if (type === 'Mechanic'){
-    return require('../../assets/Images/Mechanic-car.png')
 
-  }
-  if (type === 'Electrician'){
-    return require('../../assets/Images/electric-car.png')
+  const getImage = type => {
+    if (type === 'Mechanic') {
+      return require('../../assets/Images/Mechanic-car.png');
+    }
+    if (type === 'Electrician') {
+      return require('../../assets/Images/electric-car.png');
+    }
 
-  }
-
-    return require('../../assets/Images/tow-truck.png')
-
-  }
-  const renderRatingStars = (rating) => {
+    return require('../../assets/Images/tow-truck.png');
+  };
+  const renderRatingStars = rating => {
     const filledStars = Math.floor(rating);
     const halfStars = Math.ceil(rating - filledStars);
     const emptyStars = 5 - filledStars - halfStars;
@@ -39,44 +55,70 @@ export const HomeMap = (props) => {
     const stars = [];
 
     for (let i = 0; i < filledStars; i++) {
-      stars.push(<MaterialCommunityIcons key={i} name="star" size={20} color="gold" />);
+      stars.push(
+        <MaterialCommunityIcons key={i} name="star" size={20} color="gold" />,
+      );
     }
 
     if (halfStars > 0) {
-      stars.push(<MaterialCommunityIcons key="half" name="star-half" size={20} color="gold" />);
+      stars.push(
+        <MaterialCommunityIcons
+          key="half"
+          name="star-half"
+          size={20}
+          color="gold"
+        />,
+      );
     }
 
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<MaterialCommunityIcons key={`empty-${i}`} name="star-outline" size={20} color="gold" />);
+      stars.push(
+        <MaterialCommunityIcons
+          key={`empty-${i}`}
+          name="star-outline"
+          size={20}
+          color="gold"
+        />,
+      );
     }
 
     return stars;
   };
 
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const handleMarkerPress = (marker) => {
+  const handleMarkerPress = marker => {
+    console.log('MAIN SELECT', marker);
     setSelectedMarker(marker);
   };
+  console.log('ID', userId);
+  const handleNext = item => {
+    setuserId(item);
+    console.log('ITEMITEMITEMITEM', item);
+  };
+  React.useEffect(() => {
+    if (allFeedBack) {
+      navigation.navigate('MechanicReviewScreen', {mechaData: allFeedBack});
+    }
+  }, [allFeedBack]);
 
   return (
     <View>
       <MapView
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
-        style={{ width: '100%', height: '125%' }}
+        style={{width: '100%', height: '100%'}}
         region={{
           // Current Display Setting on screen
           latitude: 32.239815,
           longitude: 74.142355,
           latitudeDelta: 0.015,
           longitudeDelta: 0.0121,
-        }}
-      >
-        {cars.map((car) => (
+        }}>
+        {AllMechanics?.map(item => (
           <Marker
-            key={car.id}
-            coordinate={{ latitude: car.latitude, longitude: car.longitude }}
-            onPress={() => handleMarkerPress(car)} // Add onPress event
+            // key={car.id}
+            coordinate={{latitude: item.latitude, longitude: item.longitude}}
+            onPress={() => handleMarkerPress(item)} // Add onPress event
           >
             <Image
               style={{
@@ -84,7 +126,7 @@ export const HomeMap = (props) => {
                 height: 50,
               }}
               resizeMode="center"
-              source={getImage(car.type)}
+              source={require('../../assets/Images/electric-car.png')}
             />
           </Marker>
         ))}
@@ -94,20 +136,65 @@ export const HomeMap = (props) => {
       {selectedMarker && (
         <View style={styles.markerPopup}>
           <View style={styles.profileHeader}>
-            <Image
-              source={selectedMarker.image}
-              style={styles.profileImage}
-            />
+            {/* <Image source={selectedMarker.image} style={styles.profileImage} /> */}
+            <FontAwesome name="user-circle" size={100} color="blue" />
+
             <View style={styles.profileInfo}>
-              <Text style={[styles.profileName, styles.selectedMarkerName]}>Name: Abdullah {selectedMarker.name}</Text>
+              <Text style={[styles.profileName, styles.selectedMarkerName]}>
+                Name: {selectedMarker?.Name}
+              </Text>
               <View style={styles.ratingContainer}>
-                <Text style={styles.ratingText}>Rating:</Text>
-                {renderRatingStars(selectedMarker.rating)}
+                <Text style={styles.ratingText}>
+                  Rating:{selectedMarker?.rating}
+                </Text>
+
+                {/* {renderRatingStars(selectedMarker.rating)} */}
               </View>
-              <Text style={styles.ServiceType}>My Services: {selectedMarker.ServiceType}</Text>
+              <Text style={styles.ServiceType}>
+                My Services: {selectedMarker?.specialization}
+              </Text>
+              <Text style={styles.ServiceType}>
+                Contact: {selectedMarker?.contact}
+              </Text>
+            </View>
+            <View>
+              <TouchableOpacity onPress={() => handleNext(selectedMarker?.id)}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    backgroundColor: 'white',
+                    alignItems: 'center',
+                    borderRadius: 10,
+                    padding: 2,
+                    marginBottom: 10,
+                  }}>
+                  <Ionicons name="information-circle" size={18} color="blue" />
+                  Review
+                </Text>
+              </TouchableOpacity>
+              {/* <TouchableOpacity > */}
+              <Text
+                style={{
+                  backgroundColor:
+                    selectedMarker?.status === true ? 'green' : 'yellow',
+                  borderRadius: 10,
+                  color: selectedMarker?.statue === true ? 'white' : 'black',
+                  padding: 6,
+                }}>
+                {selectedMarker?.status === false ? 'Unavailable' : 'Available'}
+              </Text>
+              {/* </TouchableOpacity> */}
             </View>
           </View>
-          <Pressable style={styles.hireButton} onPress={handleHireButtonPress}>
+
+          <Pressable
+            style={styles.hireButton}
+            onPress={() =>
+              navigation.navigate('SearchResultScreen', {
+                lat: selectedMarker?.latitude,
+                lon: selectedMarker?.longitude,
+              })
+            }>
             <Text style={styles.hireButtonText}>Hire?</Text>
           </Pressable>
         </View>
@@ -119,10 +206,10 @@ export const HomeMap = (props) => {
 const styles = StyleSheet.create({
   markerPopup: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 92,
     left: 10,
     right: 10,
-    backgroundColor: 'red',
+    backgroundColor: '#008080',
     padding: 10,
     borderRadius: 10,
     elevation: 5,
@@ -142,17 +229,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profileName: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     color: 'white',
   },
   ratingText: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     color: 'white',
   },
   ServiceType: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     color: 'white',
   },
@@ -164,14 +251,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     paddingVertical: 10,
     borderRadius: 5,
-    backgroundColor:'black'
+    backgroundColor: 'black',
   },
   hireButtonText: {
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 18,
-    
   },
   ratingContainer: {
     flexDirection: 'row',
