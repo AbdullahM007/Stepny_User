@@ -6,26 +6,42 @@ import {
   Text,
   StyleSheet,
   Image,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-
+import {useUserLogInMutation} from '../ReduxTollKit/Stepney/stepney';
 const LoginScreen = () => {
+  const [
+    userLogIn, // This is the mutation trigger
+    {data, error, isLoading}, // This is the destructured mutation result
+  ] = useUserLogInMutation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
   const handleLogin = () => {
+    userLogIn({
+      email: email,
+      password: password,
+    });
     // Add login logic here using APIs, authentication, etc.
     // For simplicity, we're just navigating to the SignUp screen.
-    navigation.navigate('RootNavigator');
   };
-
+  React.useEffect(() => {
+    if (data) {
+      navigation.navigate('RootNavigator');
+    } else if (error) {
+      Alert.alert('invalid details');
+    }
+  }, [data, error]);
+  // console.log('dathgjhga'.data, error);
   const handleForgotPassword = () => {
     // Add navigation logic for the Forgot Password screen here.
     // For example, you can navigate to a "ForgotPassword" screen.
     navigation.navigate('Forgot');
   };
-
+  console.log('data', data);
   return (
     <View style={styles.container}>
       <Image
@@ -56,7 +72,11 @@ const LoginScreen = () => {
         onChangeText={text => setPassword(text)}
       />
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+        {isLoading == true ? (
+          <ActivityIndicator size="small" color={'#fff'} />
+        ) : (
+          <Text style={styles.buttonText}>Login</Text>
+        )}
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.signupButton}
