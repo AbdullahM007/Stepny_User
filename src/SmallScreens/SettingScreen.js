@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
+import {Dropdown} from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useTheme } from '@react-navigation/native';
-import { launchImageLibrary } from 'react-native-image-picker';
-
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useTheme} from '@react-navigation/native';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {useUpdateUserProfileMutation} from '../ReduxTollKit/Stepney/stepneyUser';
 const SettingScreen = () => {
+  const [
+    updateUserProfile, // This is the mutation trigger
+    {data, error, isLoading}, // This is the destructured mutation result
+  ] = useUpdateUserProfileMutation();
   // Replace these sample data with the actual user data
   const [userData, setUserData] = useState({
     firstName: 'Abdullah',
     lastName: 'Mushtaq',
     phoneNumber: '123-456-7890',
-    email: 'abdullah@uog.com',
+    address: 'abdullah@uog.com',
     city: '',
     serviceName: '',
     profilePic: require('../assets/Images/mine.jpg'), // Provide a default profile picture
@@ -23,7 +36,7 @@ const SettingScreen = () => {
   const [lastName, setLastName] = useState(userData.lastName);
   const [phoneCountryCode, setPhoneCountryCode] = useState('');
   const [phoneNumber, setPhoneNumber] = useState(userData.phoneNumber);
-  const [email, setEmail] = useState(userData.email);
+  const [address, setAddress] = useState('');
   const [city, setCity] = useState(userData.city);
   // const [Service, setService] = useState('');
   const [profilePic, setProfilePic] = useState(userData.profilePic);
@@ -33,14 +46,11 @@ const SettingScreen = () => {
   const [verificationStatus, setVerificationStatus] = useState('');
   const [otpVerified, setOtpVerified] = useState(false);
 
-  const CountryCodes =[
-    { label:'(+92)', value:'+92' }
-  ]
+  const CountryCodes = [{label: '(+92)', value: '+92'}];
   const Cities = [
-    { label: 'Lahore', value: 'Lahore' },
-    { label: 'Gujranwala', value: 'Gujranwala' },
-    { label: 'Gujrat', value: 'Gujrat' },
-    
+    {label: 'Lahore', value: 'Lahore'},
+    {label: 'Gujranwala', value: 'Gujranwala'},
+    {label: 'Gujrat', value: 'Gujrat'},
   ];
 
   // const Services = [
@@ -49,10 +59,9 @@ const SettingScreen = () => {
   //   { label: 'Car Towing', value: 'Car Tower' },
   //   // { label: 'Mechanical & Electrical', value: ['Mechanic', 'Electrician'] },
   //   // { label: 'All Services', value: ['Mechanic', 'Electrician', 'Tower'] },
-    
+
   // ];
   const renderItem = item => {
-    
     return (
       <View style={styles.item}>
         <Text style={styles.textItem}>{item.label}</Text>
@@ -74,29 +83,42 @@ const SettingScreen = () => {
       firstName.trim() === '' ||
       lastName.trim() === '' ||
       phoneNumber.trim() === '' ||
-      email.trim() === '' ||
-      city.trim() === '' ||
-      Service.trim() === ''
+      address.trim() === '' ||
+      city.trim() === ''
+      // Service.trim() === ''
     ) {
       // Show error message to the user
       alert('Please fill in all required fields');
       return;
     }
-  
+
     // Implement your logic to update the user data using API or other methods
     // For this example, we'll just update the state
     setUserData({
       firstName,
       lastName,
       phoneNumber,
-      email,
+      address,
       city,
-      serviceName: Service,
+      // serviceName: Service,
       profilePic,
     });
-    alert('Profile updated successfully!');
+    updateUserProfile({
+      first_name: 'Usama544',
+      last_name: 'Iqbal',
+      contact: '03242233',
+      city: 'Gujrat',
+      address: 'Staff Gala, Gujrat',
+    });
   };
-
+  React.useEffect(() => {
+    if (data) {
+      alert('Profile updated successfully!');
+    } else if (error) {
+      Alert.alert('', 'Please Provide Proper Details');
+    }
+  }, [data, error]);
+  console.log('UPDATE', data, error);
   // Function to handle profile picture selection
   const handleChooseProfilePic = () => {
     const options = {
@@ -107,35 +129,32 @@ const SettingScreen = () => {
       mediaType: 'photo',
       quality: 0.5,
     };
-  
-    launchImageLibrary(options, (response) => {
+
+    launchImageLibrary(options, response => {
       if (response.didCancel) {
         // User cancelled the picker
       } else if (response.error) {
         // Error occurred while picking the image
       } else {
         // Image selected successfully, set the new profile picture
-        setProfilePic({ uri: response.uri });
+        setProfilePic({uri: response.uri});
       }
     });
   };
 
-
-  
-
-  const handleFirstNameInput = (text) => {
+  const handleFirstNameInput = text => {
     // Allow only alphabets (A-Za-z) and remove other characters
     setFirstName(text.replace(/[^A-Za-z]/g, ''));
   };
 
   // Function to handle last name input
-  const handleLastNameInput = (text) => {
+  const handleLastNameInput = text => {
     // Allow only alphabets (A-Za-z) and remove other characters
     setLastName(text.replace(/[^A-Za-z]/g, ''));
   };
 
   // Function to handle phone number input
-  const handlePhoneNumberInput = (text) => {
+  const handlePhoneNumberInput = text => {
     // Allow only numeric digits (0-9) and remove other characters
     const numericText = text.replace(/[^0-9]/g, '');
 
@@ -153,10 +172,10 @@ const SettingScreen = () => {
       setVerificationStatus('Please enter a valid 10-11 digit phone number');
       return;
     }
-  
+
     // Implement logic to send OTP to the user's phone number
     // For example, you can use an API to send the OTP via SMS
-  
+
     // For this example, we'll simulate OTP sent by setting otpSent to true
     setOtpSent(true);
     setVerificationStatus('OTP sent. Please check your phone for the OTP.');
@@ -179,13 +198,34 @@ const SettingScreen = () => {
     }
   };
 
-  
-
+  const [ImageUrl, setImageUrl] = React.useState('');
+  const handlePickImage = React.useCallback(async () => {
+    const result = await launchImageLibrary({
+      maxHeight: 200,
+      maxWidth: 200,
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: true,
+    });
+    setImageUrl(result.assets?.[0]?.base64 || '');
+  }, [ImageUrl]);
   return (
     <View style={styles.container}>
       {/* Profile Picture */}
-      <TouchableOpacity onPress={handleChooseProfilePic}>
-        <Image source={profilePic} style={styles.profilePic} />
+      <TouchableOpacity
+        style={{marginBottom: 20}}
+        onPress={() => handlePickImage()}>
+        {ImageUrl ? (
+          <Image
+            source={{
+              uri: `data:image/png;base64,${ImageUrl}`,
+            }}
+            // source={profilePic}
+            style={styles.profilePic}
+          />
+        ) : (
+          <FontAwesome name="user-circle" size={100} color="red" />
+        )}
       </TouchableOpacity>
 
       {/* First Name */}
@@ -205,43 +245,43 @@ const SettingScreen = () => {
         placeholder="Last Name"
         placeholderTextColor="black"
       />
-<View style={styles.phoneInputContainer}>
-      {/* Phone Number */}
-      <Dropdown
-        style={styles.countryCode}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.inputSearchStyle}
-        data={CountryCodes}
-        maxHeight={300}
-        labelField="label"
-        valueField="value"
-        placeholder="Country code"
-        placeholderTextColor="black"
-        value={phoneCountryCode}
-        onChange={item => {
-          setPhoneCountryCode(item.value);
-        }}
-        renderItem={renderItem}
-      />
-      <View style={styles.phoneVerifyContainer} >
-      <TextInput
-    style={styles.phoneNumber}
-    placeholder="Phone Number"
-    placeholderTextColor={'black'}
-    value={phoneNumber}
-    onChangeText={handlePhoneNumberInput}
-    keyboardType="phone-pad"
-  />
-  {/* Verify Button for sending OTP */}
-  <TouchableOpacity style={styles.verifyButton} onPress={handleSendOTP}>
-          <Text style={styles.verifyButtonText}>Verify</Text>
-        </TouchableOpacity>
+      <View style={styles.phoneInputContainer}>
+        {/* Phone Number */}
+        <Dropdown
+          style={styles.countryCode}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          data={CountryCodes}
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder="Country code"
+          placeholderTextColor="black"
+          value={phoneCountryCode}
+          onChange={item => {
+            setPhoneCountryCode(item.value);
+          }}
+          renderItem={renderItem}
+        />
+        <View style={styles.phoneVerifyContainer}>
+          <TextInput
+            style={styles.phoneNumber}
+            placeholder="Phone Number"
+            placeholderTextColor={'black'}
+            value={phoneNumber}
+            onChangeText={handlePhoneNumberInput}
+            keyboardType="phone-pad"
+          />
+          {/* Verify Button for sending OTP */}
+          {/* <TouchableOpacity style={styles.verifyButton} onPress={handleSendOTP}>
+            <Text style={styles.verifyButtonText}>Verify</Text>
+          </TouchableOpacity> */}
         </View>
-  </View>
-  
-   {/* OTP Input */}
-   {otpSent && !otpVerified && (
+      </View>
+
+      {/* OTP Input */}
+      {otpSent && !otpVerified && (
         <View style={styles.otpContainer}>
           <View style={styles.otpInputContainer}>
             <TextInput
@@ -253,7 +293,9 @@ const SettingScreen = () => {
               placeholderTextColor="black"
             />
             {/* Verify OTP Button */}
-            <TouchableOpacity style={styles.verifyOtpButton} onPress={handleVerifyOTP}>
+            <TouchableOpacity
+              style={styles.verifyOtpButton}
+              onPress={handleVerifyOTP}>
               <Text style={styles.verifyButtonText}>Verify OTP</Text>
             </TouchableOpacity>
           </View>
@@ -261,17 +303,21 @@ const SettingScreen = () => {
       )}
 
       {/* Verification Status */}
-      <Text style={[styles.verificationStatus, otpVerified ? styles.verificationSuccess : null]}>
+      <Text
+        style={[
+          styles.verificationStatus,
+          otpVerified ? styles.verificationSuccess : null,
+        ]}>
         {verificationStatus}
       </Text>
 
       {/* Email */}
       <TextInput
         style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email"
-        keyboardType="email-address"
+        value={address}
+        onChangeText={setAddress}
+        placeholder="Address"
+        // keyboardType="address-address"
         placeholderTextColor="black" // Set placeholder text color to black
       />
 
@@ -294,7 +340,12 @@ const SettingScreen = () => {
           setCity(item.value);
         }}
         renderLeftIcon={() => (
-          <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
+          <AntDesign
+            style={styles.icon}
+            color="black"
+            name="Safety"
+            size={20}
+          />
         )}
         renderItem={renderItem}
       />
@@ -325,8 +376,14 @@ const SettingScreen = () => {
       /> */}
 
       {/* Update Button */}
-      <TouchableOpacity style={styles.updateButton} onPress={handleProfileUpdate}>
-        <Text style={styles.buttonText}>Update Profile</Text>
+      <TouchableOpacity
+        style={styles.updateButton}
+        onPress={() => handleProfileUpdate()}>
+        {isLoading == true ? (
+          <ActivityIndicator size="small" color={'green'} />
+        ) : (
+          <Text style={styles.buttonText}>Update Profile</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -337,7 +394,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 20,
-    backgroundColor:'black'
+    backgroundColor: '#d4d4d8',
   },
   profilePic: {
     width: 150,
@@ -355,7 +412,6 @@ const styles = StyleSheet.create({
     padding: 10,
     color: 'black',
     backgroundColor: 'white',
-
   },
   updateButton: {
     backgroundColor: 'white',
@@ -368,10 +424,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  
+
   selectedTextStyle: {
     fontSize: 16,
-    color:'black',
+    color: 'black',
   },
   inputSearchStyle: {
     height: 40,
@@ -379,7 +435,7 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
-    color:'black',
+    color: 'black',
   },
   dropdown: {
     marginBottom: 20,
@@ -387,7 +443,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
     padding: 12,
-    width:'100%',
+    width: '100%',
     borderWidth: 1,
     borderColor: '#ccc',
   },
@@ -396,12 +452,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    color:'black',
+    color: 'black',
   },
   textItem: {
     flex: 1,
     fontSize: 16,
-    color:'black',
+    color: 'black',
   },
   phoneInputContainer: {
     width: '100%',
@@ -410,16 +466,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-  
+
   countryCode: {
     width: '25%',
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius:5,
+    borderRadius: 5,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
-    fontSize:1,
+    fontSize: 1,
   },
   phoneNumber: {
     width: '70%',
@@ -428,17 +484,16 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
-    color:'black',
-    borderRadius:5,
-
+    color: 'black',
+    borderRadius: 5,
   },
-  phoneVerifyContainer:{
+  phoneVerifyContainer: {
     width: '70%',
     flexDirection: 'row',
     borderColor: '#ccc',
     // borderWidth: 1,
     // marginBottom: 10,
-    borderRadius:5,
+    borderRadius: 5,
     // paddingHorizontal: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
@@ -451,8 +506,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 20,
     alignSelf: 'center',
-    flexDirection:'row'
-
+    flexDirection: 'row',
   },
   verifyButtonText: {
     color: 'white',
@@ -474,21 +528,21 @@ const styles = StyleSheet.create({
   otpInputContainer: {
     width: '77.5%',
     flexDirection: 'row',
-    height:40,
+    height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 10,
-    borderRadius:5,
+    borderRadius: 5,
     paddingHorizontal: 3,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  verifyOtpButton:{
-    backgroundColor:'black',
-    flexDirection:'row',
-    borderRadius:20,
-    padding:8,
+  verifyOtpButton: {
+    backgroundColor: 'black',
+    flexDirection: 'row',
+    borderRadius: 20,
+    padding: 8,
   },
   verificationStatus: {
     color: 'red',
