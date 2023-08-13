@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,18 +6,25 @@ import {
   Pressable,
   StyleSheet,
   TouchableOpacity,
+  PermissionsAndroid,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import {useDispatch} from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import cars from '../../assets/data/cars';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
   useGetAllFeedBackQuery,
   useGetAllMechanicsQuery,
 } from '../../ReduxTollKit/Stepney/stepneyUser';
+import {setLocationaccess} from '../../ReduxTollKit/Slices/slice';
+import Geolocation from '@react-native-community/geolocation';
 export const HomeMap = props => {
+  const dispatch = useDispatch();
+  const [granted, setGranted] = useState(false);
+
   const {
     data: AllMechanics,
     error: mechanicError,
@@ -30,13 +37,74 @@ export const HomeMap = props => {
     isLoading: feedBackLoading,
   } = useGetAllFeedBackQuery({id: userId});
   // console.log('GET ALLMechanics', allFeedBack, feedBackError);
-
+  const [originLocation, setUserLocation] = useState([]);
   const navigation = useNavigation();
   const handleHireButtonPress = () => {
     // Navigate to the desired screen here
     navigation.navigate('DestinationSearchScreen'); // Replace 'DestinationScreen' with the name of the screen you want to navigate to
   };
 
+  const requestLocationPermission = async () => {
+    try {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (PermissionsAndroid.RESULTS.GRANTED) {
+        console.log(
+          'PermissionsAndroid.RESULTS.GRANTED',
+          PermissionsAndroid.RESULTS.GRANTED,
+        );
+
+        setGranted(true);
+      } else {
+        setGranted(false);
+        dispatch(setLocationaccess(false));
+        Alert.alert('Location permission denied');
+      }
+    } catch (err) {
+      setGranted(false);
+      dispatch(setLocationaccess(false));
+      // console.warn(err);
+      console.log('Erros', err);
+    }
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      // getLocation();
+      requestLocationPermission();
+    }, []),
+  );
+  // useEffect(() => {
+  //   requestLocationPermission();
+  // }, []);
+
+  function getLocation() {
+    Geolocation.getCurrentPosition(
+      position => {
+        // console.log('DATA', position);
+        // dispatch(
+        setUserLocation({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        });
+        // );
+      },
+      error => {
+        // See error code charts below.
+        console.log('DATAerror', error);
+
+        console.error(error.code, error.message);
+        dispatch(setLocationaccess(false));
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  }
+  useEffect(() => {
+    if (granted) {
+      getLocation();
+    }
+  }, [granted]);
+  console.log('LOCATION', originLocation, granted);
   const getImage = type => {
     if (type === 'Mechanic') {
       return require('../../assets/Images/Mechanic-car.png');
@@ -93,7 +161,20 @@ export const HomeMap = props => {
   console.log('ID', userId);
   const handleNext = item => {
     setuserId(item);
-    console.log('ITEMITEMITEMITEM', item);
+  };
+  const [destinationPlace, setdestinationPlace] = useState();
+
+  useEffect(() => {
+    if (selectedMarker) {
+      setdestinationPlace(selectedMarker);
+    }
+  }, [selectedMarker]);
+  console.log('destination', destinationPlace);
+  const handleTrackeUSer = () => {
+    navigation.navigate('SearchResultScreen', {
+      originLocation,
+      destinationPlace,
+    });
   };
   React.useEffect(() => {
     if (allFeedBack) {
@@ -105,7 +186,7 @@ export const HomeMap = props => {
     <View>
       <MapView
         provider={PROVIDER_GOOGLE}
-        showsUserLocation={true}
+        // showsUserLocation={true}
         style={{width: '100%', height: '100%'}}
         region={{
           // Current Display Setting on screen
@@ -173,7 +254,7 @@ export const HomeMap = props => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('SearchResultScreen')}>
+                onPress={() => navigation.navigate('DestinationSearchScreen')}>
                 <Text
                   style={{
                     backgroundColor:
@@ -192,12 +273,7 @@ export const HomeMap = props => {
 
           <Pressable
             style={styles.hireButton}
-            onPress={() =>
-              navigation.navigate('SearchResultScreen', {
-                lat: selectedMarker?.latitude,
-                lon: selectedMarker?.longitude,
-              })
-            }>
+            onPress={() => handleTrackeUSer()}>
             <Text style={styles.hireButtonText}>Hire?</Text>
           </Pressable>
         </View>
