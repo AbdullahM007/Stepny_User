@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import {useOtpConfirmationMutation} from '../ReduxTollKit/Stepney/stepney';
 import {useNavigation} from '@react-navigation/native';
@@ -46,8 +47,10 @@ const OTPScreen = ({route}) => {
   React.useEffect(() => {
     if (data) {
       navigation.navigate('RootNavigator');
+    } else {
+      Alert.alert('', 'Invalid otp');
     }
-  }, [data]);
+  }, [data, error]);
   console.log('DFASDFASD', data, error, otp);
 
   return (
