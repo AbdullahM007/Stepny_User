@@ -26,9 +26,23 @@ export const stepneyApi = createApi({
         };
       },
     }),
+    userLogIn: builder.mutation({
+      // note: an optional `queryFn` may be used in place of `query`
+      query: body => {
+        return {
+          url: `/customerlogin/`,
+          method: 'POST',
+          body: body,
+        };
+      },
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {useSignUpUserMutation, useOtpConfirmationMutation} = stepneyApi;
+export const {
+  useSignUpUserMutation,
+  useOtpConfirmationMutation,
+  useUserLogInMutation,
+} = stepneyApi;
