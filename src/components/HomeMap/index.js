@@ -36,7 +36,6 @@ export const HomeMap = props => {
     error: feedBackError,
     isLoading: feedBackLoading,
   } = useGetAllFeedBackQuery({id: userId});
-  // console.log('GET ALLMechanics', allFeedBack, feedBackError);
   const [originLocation, setUserLocation] = useState([]);
   const navigation = useNavigation();
   const handleHireButtonPress = () => {
@@ -91,7 +90,6 @@ export const HomeMap = props => {
       },
       error => {
         // See error code charts below.
-        console.log('DATAerror', error);
 
         console.error(error.code, error.message);
         dispatch(setLocationaccess(false));
@@ -104,7 +102,6 @@ export const HomeMap = props => {
       getLocation();
     }
   }, [granted]);
-  console.log('LOCATION', originLocation, granted);
   const getImage = type => {
     if (type === 'Mechanic') {
       return require('../../assets/Images/Mechanic-car.png');
@@ -155,10 +152,8 @@ export const HomeMap = props => {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const handleMarkerPress = marker => {
-    console.log('MAIN SELECT', marker);
     setSelectedMarker(marker);
   };
-  console.log('ID', userId);
   const handleNext = item => {
     setuserId(item);
   };
@@ -169,7 +164,6 @@ export const HomeMap = props => {
       setdestinationPlace(selectedMarker);
     }
   }, [selectedMarker]);
-  console.log('destination', destinationPlace);
   const handleTrackeUSer = () => {
     navigation.navigate('SearchResultScreen', {
       originLocation,
@@ -181,7 +175,6 @@ export const HomeMap = props => {
       navigation.navigate('MechanicReviewScreen', {mechaData: allFeedBack});
     }
   }, [allFeedBack]);
-  console.log('allFeedBack', allFeedBack);
   return (
     <View>
       <MapView
@@ -258,9 +251,9 @@ export const HomeMap = props => {
                 <Text
                   style={{
                     backgroundColor:
-                      selectedMarker?.status === true ? 'green' : 'yellow',
+                      selectedMarker?.status === true ? 'green' : 'red',
                     borderRadius: 10,
-                    color: selectedMarker?.statue === true ? 'white' : 'black',
+                    color: selectedMarker?.statue === true ? 'white' : 'white',
                     padding: 6,
                   }}>
                   {selectedMarker?.status === false
@@ -327,10 +320,10 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   hireButton: {
-    backgroundColor: 'blue',
+    // backgroundColor: 'blue',
     paddingVertical: 10,
     borderRadius: 5,
-    backgroundColor: 'black',
+    backgroundColor: 'red',
   },
   hireButtonText: {
     color: 'white',

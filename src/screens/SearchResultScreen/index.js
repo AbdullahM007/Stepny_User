@@ -29,7 +29,6 @@ const SearchResultScreen = props => {
     ]);
   };
 
-  console.log(route.params);
   const {originLocation, destinationPlace} = route.params;
   // console.log('origin', originPlace);
   return (

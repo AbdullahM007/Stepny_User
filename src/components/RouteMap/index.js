@@ -6,14 +6,6 @@ import MapViewDirections from 'react-native-maps-directions';
 const GOOGLE_MAPS_APIKEY = 'AIzaSyBAo0ueJdL4wZYYrGFFBVbEuziCLDyQhN8';
 
 const RouteMap = ({origin, destination}) => {
-  // console.log(
-  //   (origin.details.geometry.location.lat +
-  //     destination.details.geometry.location.lat) /
-  //     2,
-  // );
-  console.log('hello', (origin.lon + destination?.latitude) / 2);
-  // const [dest, setDest] = useState();
-  // const [orig, setorig] = useState();
   const originLoc = {
     latitude: origin?.lat || 0,
     longitude: origin?.lon || 0,
