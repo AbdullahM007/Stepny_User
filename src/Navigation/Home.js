@@ -13,6 +13,7 @@ import SignUpScreen from '../SmallScreens/SignupScreen';
 import ForgotScreen from '../SmallScreens/ForgotSecreen';
 import RootNavigator from './Root';
 import OTPScreen from '../SmallScreens/OtpScreen';
+import MechanicReviewScreen from '../components/HomeMap/MechanicReviewScreen';
 
 const Stack = createStackNavigator();
 const HomeNavigator = props => {
@@ -39,6 +40,10 @@ const HomeNavigator = props => {
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="OTPScreen" component={OTPScreen} />
       <Stack.Screen name="Forgot" component={ForgotScreen} />
+      <Stack.Screen
+        name="MechanicReviewScreen"
+        component={MechanicReviewScreen}
+      />
       <Stack.Screen name="RootNavigator" component={RootNavigator} />
     </Stack.Navigator>
   );
