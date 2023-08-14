@@ -10,8 +10,7 @@ import {
 import {useOtpConfirmationMutation} from '../ReduxTollKit/Stepney/stepney';
 import {useNavigation} from '@react-navigation/native';
 import OtpInputs from 'react-native-otp-inputs';
-
-const OTPScreen = ({route}) => {
+const OTPScreen = ({ route }) => {
   const [
     otpConfirmation, // This is the mutation trigger
     {data, error, isLoading: isUpdating}, // This is the destructured mutation result

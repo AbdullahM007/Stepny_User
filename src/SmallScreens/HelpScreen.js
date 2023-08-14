@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, Image, Animated, Easing } from 'react-native';
-import { useIsFocused } from '@react-navigation/native'; // Import useIsFocused hook
+import React, {useEffect, useRef, useCallback} from 'react';
+import {View, Text, StyleSheet, Image, Animated, Easing} from 'react-native';
+import {useIsFocused} from '@react-navigation/native'; // Import useIsFocused hook
 
 const HelpScreen = () => {
   const isFocused = useIsFocused(); // Get the focused state of the component
@@ -26,7 +26,7 @@ const HelpScreen = () => {
 
   // Interpolate the animated value to apply translation on the X-axis
   const animatedStyle = {
-    transform: [{ translateX: bounceValue }],
+    transform: [{translateX: bounceValue}],
   };
 
   return (

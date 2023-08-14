@@ -7,8 +7,8 @@ const GOOGLE_MAPS_APIKEY = 'AIzaSyBAo0ueJdL4wZYYrGFFBVbEuziCLDyQhN8';
 
 const RouteMap = ({origin, destination}) => {
   const originLoc = {
-    latitude: origin?.lat || 0,
-    longitude: origin?.lon || 0,
+    latitude: origin?.lat,
+    longitude: origin?.lon,
   };
 
   const destinationLoc = {

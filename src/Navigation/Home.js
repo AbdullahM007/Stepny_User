@@ -14,37 +14,55 @@ import ForgotScreen from '../SmallScreens/ForgotSecreen';
 import RootNavigator from './Root';
 import OTPScreen from '../SmallScreens/OtpScreen';
 import MechanicReviewScreen from '../components/HomeMap/MechanicReviewScreen';
-
+import {getStorageData} from '../Async/AsyncStorage';
 const Stack = createStackNavigator();
 const HomeNavigator = props => {
+  React.useEffect(() => {
+    handleStack();
+  }, []);
+  const [staySignIn, setStaySignIn] = React.useState(['']);
+  console.log(staySignIn);
+  const handleStack = async () => {
+    const userToken = await getStorageData('userToken');
+    // console.log(userToken);
+    // setStaySignIn(userToken);
+  };
   return (
     <Stack.Navigator
       initialRouteName="Login"
       screenOptions={{headerShown: false}}>
-      {/* <Stack.Screen name={"SplashScreen"} component={SplashScreen} /> */}
-      {/* <Stack.Screen name={"Intro"} component={Intro}/> */}
+      {!staySignIn ? (
+        <Stack.Group>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="OTPScreen" component={OTPScreen} />
+          <Stack.Screen name="Forgot" component={ForgotScreen} />
+        </Stack.Group>
+      ) : (
+        <Stack.Group>
+          {/* <Stack.Screen name={"SplashScreen"} component={SplashScreen} /> */}
+          {/* <Stack.Screen name={"Intro"} component={Intro}/> */}
+          <Stack.Screen name="RootNavigator" component={RootNavigator} />
 
-      {/* <Stack.Screen name={'Home'} component={HomeScreen} /> */}
-      <Stack.Screen
-        name={'DestinationSearchScreen'}
-        component={DestinationSearchScreen}
-      />
-      <Stack.Screen
-        name={'SearchResultScreen'}
-        component={SearchResultScreen}
-      />
-      <Stack.Screen name={'SearchResultMap'} component={SearchResultMap} />
-      <Stack.Screen name={'SettingScreen'} component={SettingScreen} />
-      <Stack.Screen name={'OrderScreen'} component={OrderScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="SignUp" component={SignUpScreen} />
-      <Stack.Screen name="OTPScreen" component={OTPScreen} />
-      <Stack.Screen name="Forgot" component={ForgotScreen} />
-      <Stack.Screen
-        name="MechanicReviewScreen"
-        component={MechanicReviewScreen}
-      />
-      <Stack.Screen name="RootNavigator" component={RootNavigator} />
+          {/* <Stack.Screen name={'Home'} component={HomeScreen} /> */}
+          <Stack.Screen
+            name={'DestinationSearchScreen'}
+            component={DestinationSearchScreen}
+          />
+          <Stack.Screen
+            name={'SearchResultScreen'}
+            component={SearchResultScreen}
+          />
+          <Stack.Screen name={'SearchResultMap'} component={SearchResultMap} />
+          <Stack.Screen name={'SettingScreen'} component={SettingScreen} />
+          <Stack.Screen name={'OrderScreen'} component={OrderScreen} />
+
+          <Stack.Screen
+            name="MechanicReviewScreen"
+            component={MechanicReviewScreen}
+          />
+        </Stack.Group>
+      )}
     </Stack.Navigator>
   );
 };

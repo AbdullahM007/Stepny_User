@@ -3,6 +3,9 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
   value: 0,
   locationaccess: true,
+  lat: 0,
+  lon: 0,
+  location: {lat: 0, lon: 0},
 };
 
 export const counterSlice = createSlice({
@@ -25,11 +28,27 @@ export const counterSlice = createSlice({
     setLocationaccess: (state, action) => {
       state.locationaccess = action.payload;
     },
+    setLAtitude: (state, action) => {
+      state.lat = action.payload;
+    },
+    setLongitude: (state, action) => {
+      state.lon = action.payload;
+    },
+    setLocation: (state, action) => {
+      state.location = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {increment, decrement, incrementByAmount, setLocationaccess} =
-  counterSlice.actions;
+export const {
+  setLAtitude,
+  setLongitude,
+  increment,
+  decrement,
+  incrementByAmount,
+  setLocation,
+  setLocationaccess,
+} = counterSlice.actions;
 
 export default counterSlice.reducer;

@@ -11,7 +11,10 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
+import {useForgotPasswordMutation} from '../ReduxTollKit/Stepney/stepneyUser';
 const ForgotScreen = () => {
+  const [forgotPassword, {data, error, isLoading}] =
+    useForgotPasswordMutation();
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
@@ -20,9 +23,12 @@ const ForgotScreen = () => {
   const handleVerifyEmail = () => {
     // Add logic for verifying email and sending OTP
     // For simplicity, we're not implementing any logic here.
+    forgotPassword({
+      email: 'mechanic1@gmail.com',
+    });
     alert('Email verification request sent.');
   };
-
+  console.log('data', data, 'error', error);
   const handleSignUp = () => {
     // Add sign-up logic here using APIs, registration, etc.
     // For simplicity, we're not implementing any logic here.

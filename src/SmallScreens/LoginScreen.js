@@ -9,7 +9,9 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import {storeData} from '../Async/AsyncStorage';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
 import {useUserLogInMutation} from '../ReduxTollKit/Stepney/stepney';
 const LoginScreen = () => {
   const [
@@ -19,8 +21,11 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
-
+  const useData = useSelector(state => state.useData.value);
+  console.log('usedetail', useData);
   const handleLogin = () => {
+    // storeData('userToken', JSON.stringify('JAMI'));
+
     userLogIn({
       email: email,
       password: password,
@@ -28,9 +33,13 @@ const LoginScreen = () => {
     // Add login logic here using APIs, authentication, etc.
     // For simplicity, we're just navigating to the SignUp screen.
   };
+  // console.log('datadata:', data?.token?.access_token);
+
   React.useEffect(() => {
     if (data) {
-      navigation.navigate('RootNavigator');
+      console.log('data', data?.token?.access_token);
+      storeData('userToken', JSON.stringify(data?.token?.access_token));
+      // navigation.navigate('RootNavigator');
     } else if (error) {
       Alert.alert('invalid details');
     }
@@ -41,7 +50,7 @@ const LoginScreen = () => {
     // For example, you can navigate to a "ForgotPassword" screen.
     navigation.navigate('Forgot');
   };
-  console.log('data', data);
+  // console.log('', JSON.stringify(data?.token?.access_token));
   return (
     <View style={styles.container}>
       <Image

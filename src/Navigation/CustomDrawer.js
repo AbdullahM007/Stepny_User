@@ -1,12 +1,15 @@
-import {View, Text, Pressable} from 'react-native';
+import {View, Text, Pressable, Image} from 'react-native';
 import React from 'react';
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import {useGetUserProfileQuery} from '../ReduxTollKit/Stepney/stepneyUser';
 import {useNavigation} from '@react-navigation/native';
 
 const CustomDrawer = props => {
+  const {data, error, isLoading} = useGetUserProfileQuery(null);
+  console.log('User profile', data);
   const navigation = useNavigation();
   const handleLogout = () => {
     console.warn('Log Out');
@@ -14,6 +17,14 @@ const CustomDrawer = props => {
   const gotoSetting = () => {
     navigation.navigate('SettingScreen');
   };
+  const [userProfile, setUserProfile] = React.useState();
+
+  React.useEffect(() => {
+    if (data) {
+      setUserProfile(data);
+    }
+  }, [data]);
+
   return (
     <DrawerContentScrollView {...props} style={{backgroundColor: '#a52a2a'}}>
       <View style={{flex: 1, backgroundColor: '#a52a2a'}}>
@@ -26,7 +37,7 @@ const CustomDrawer = props => {
             paddingLeft: 10,
             paddingBottom: 30,
           }}>
-          <View
+          {/* <View
             style={{
               backgroundColor: '#EF5350',
               width: 60,
@@ -34,9 +45,15 @@ const CustomDrawer = props => {
               borderRadius: 35,
               marginRight: 12,
             }}
+          /> */}
+          <Image
+            style={{width: 50, height: 50, borderRadius: 300}}
+            source={{uri: userProfile?.profile_picture}}
           />
           <View>
-            <Text style={{color: 'white', fontSize: 24}}>Abdullah Mushtaq</Text>
+            <Text style={{color: 'white', fontSize: 24}}>
+              {userProfile?.first_name + userProfile?.last_name}
+            </Text>
             <Text style={{color: 'lightgrey'}}>5.0 *</Text>
           </View>
         </View>

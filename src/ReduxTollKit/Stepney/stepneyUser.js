@@ -32,11 +32,38 @@ export const stepneyUserDetailsApi = createApi({
         };
       },
     }),
+    forgotPassword: builder.mutation({
+      // note: an optional `queryFn` may be used in place of `query`
+      query: ({body}) => {
+        console.log('ERRRODATE', body);
+        return {
+          url: `/resetpassword/`,
+          method: 'POST',
+          body: body,
+          // headers: {'Content-Type': 'application/json'},
+        };
+      },
+    }),
+    placeOrder: builder.mutation({
+      // note: an optional `queryFn` may be used in place of `query`
+      query: ({body}) => {
+        // console.log('ERRRODATE', body);
+        return {
+          url: `/order/`,
+          method: 'POST',
+          body: body,
+          // headers: {'Content-Type': 'application/json'},
+        };
+      },
+    }),
     getAllMechanics: builder.query({
       query: () => `/findmechanics/${'Gujranwala'}`,
     }),
     getAllFeedBack: builder.query({
       query: ({id}) => `/feedbacks/${id}`,
+    }),
+    getUserProfile: builder.query({
+      query: () => `/profile/`,
     }),
   }),
 });
@@ -47,4 +74,7 @@ export const {
   useUpdateUserProfileMutation,
   useGetAllMechanicsQuery,
   useGetAllFeedBackQuery,
+  useForgotPasswordMutation,
+  useGetUserProfileQuery,
+  usePlaceOrderMutation,
 } = stepneyUserDetailsApi;

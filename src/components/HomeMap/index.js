@@ -9,21 +9,38 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import {useDispatch} from 'react-redux';
+import {usePlaceOrderMutation} from '../../ReduxTollKit/Stepney/stepneyUser';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import cars from '../../assets/data/cars';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   useGetAllFeedBackQuery,
   useGetAllMechanicsQuery,
 } from '../../ReduxTollKit/Stepney/stepneyUser';
-import {setLocationaccess} from '../../ReduxTollKit/Slices/slice';
+import {
+  setLAtitude,
+  setLocation,
+  setLocationaccess,
+  setLongitude,
+} from '../../ReduxTollKit/Slices/slice';
 import Geolocation from '@react-native-community/geolocation';
 export const HomeMap = props => {
+  const [
+    placeOrder,
+    {data: placeOrderData, isLoading: orderLoading, error: orderERROR},
+  ] = usePlaceOrderMutation();
+  console.log('placeOrderData', placeOrderData);
   const dispatch = useDispatch();
   const [granted, setGranted] = useState(false);
+  const latitude = useSelector(state => state.useData.lat);
+  const location = useSelector(state => state.useData.location);
+  const longitude = useSelector(state => state.useData.lon);
+  useEffect(() => {
+    placeOrder({id: 16});
+  }, []);
 
   const {
     data: AllMechanics,
@@ -36,13 +53,14 @@ export const HomeMap = props => {
     error: feedBackError,
     isLoading: feedBackLoading,
   } = useGetAllFeedBackQuery({id: userId});
-  const [originLocation, setUserLocation] = useState([]);
+  const [originLocation, setUserLocation] = useState({lat: 0, lon: 0});
+
   const navigation = useNavigation();
   const handleHireButtonPress = () => {
     // Navigate to the desired screen here
     navigation.navigate('DestinationSearchScreen'); // Replace 'DestinationScreen' with the name of the screen you want to navigate to
   };
-
+  // console.log('loca', originLocation);
   const requestLocationPermission = async () => {
     try {
       await PermissionsAndroid.request(
@@ -85,13 +103,19 @@ export const HomeMap = props => {
         setUserLocation({
           lat: position.coords.latitude,
           lon: position.coords.longitude,
-        });
+        }),
+          dispatch(
+            setLocation({
+              lat: position.coords.latitude,
+              lon: position.coords.longitude,
+            }),
+          );
         // );
       },
       error => {
         // See error code charts below.
 
-        console.error(error.code, error.message);
+        console.error('dfdgdg', error.code, error.message);
         dispatch(setLocationaccess(false));
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
@@ -170,6 +194,7 @@ export const HomeMap = props => {
       destinationPlace,
     });
   };
+  console.log('originLocation', originLocation);
   React.useEffect(() => {
     if (allFeedBack) {
       navigation.navigate('MechanicReviewScreen', {mechaData: allFeedBack});
@@ -177,35 +202,43 @@ export const HomeMap = props => {
   }, [allFeedBack]);
   return (
     <View>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        // showsUserLocation={true}
-        style={{width: '100%', height: '100%'}}
-        region={{
-          // Current Display Setting on screen
-          latitude: 32.239815,
-          longitude: 74.142355,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}>
-        {AllMechanics?.map(item => (
+      {location && (
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          // showsUserLocation={true}
+          style={{width: '100%', height: '100%'}}
+          region={{
+            // Current Display Setting on screen
+            latitude: location.lat,
+            longitude: location.lon,
+            latitudeDelta: 2.015,
+            longitudeDelta: 2.0121,
+          }}>
           <Marker
-            // key={car.id}
-            coordinate={{latitude: item.latitude, longitude: item.longitude}}
-            onPress={() => handleMarkerPress(item)} // Add onPress event
-          >
-            <Image
-              style={{
-                width: 50,
-                height: 50,
-              }}
-              resizeMode="center"
-              source={require('../../assets/Images/electric-car.png')}
-            />
-          </Marker>
-        ))}
-      </MapView>
+            coordinate={{
+              latitude: location.lat,
+              longitude: location.lon,
+            }}
+          />
 
+          {AllMechanics?.map(item => (
+            <Marker
+              // key={car.id}
+              coordinate={{latitude: item.latitude, longitude: item.longitude}}
+              onPress={() => handleMarkerPress(item)} // Add onPress event
+            >
+              <Image
+                style={{
+                  width: 50,
+                  height: 50,
+                }}
+                resizeMode="center"
+                source={require('../../assets/Images/electric-car.png')}
+              />
+            </Marker>
+          ))}
+        </MapView>
+      )}
       {/* Add the popup to display marker details */}
       {selectedMarker && (
         <View style={styles.markerPopup}>
