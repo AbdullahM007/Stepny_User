@@ -10,9 +10,12 @@ import {
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {removeStorageData} from '../Async/AsyncStorage';
+import {useDispatch} from 'react-redux';
+import {setToken} from '../ReduxTollKit/Slices/slice';
 
 const RecentRidesScreen = () => {
   // Sample data for recent rides
+  const dispatch = useDispatch();
   const [recentRides, setRecentRides] = useState([
     {
       id: '1',
@@ -83,6 +86,7 @@ const RecentRidesScreen = () => {
     //   .then(async () => {
     // User logged out successfully
     await removeStorageData('userToken');
+    dispatch(setToken(false));
     // dispatch(setUserId(''));
 
     // navigation.navigate('LogIn');

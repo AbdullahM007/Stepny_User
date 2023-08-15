@@ -30,7 +30,7 @@ const HomeNavigator = props => {
   const handleStack = async () => {
     const userToken = await getStorageData('userToken');
     // console.log(userToken);
-    dispatch(setToken(userToken));
+    dispatch(setToken(true));
     // setStaySignIn(userToken);
   };
   // console.log('useToken', useToken);

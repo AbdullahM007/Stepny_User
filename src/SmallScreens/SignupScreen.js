@@ -15,13 +15,16 @@ import {Picker} from '@react-native-picker/picker';
 import {Dropdown} from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useSignUpUserMutation} from '../ReduxTollKit/Stepney/stepney';
+import {useDispatch} from 'react-redux';
+import {setToken} from '../ReduxTollKit/Slices/slice';
 const SignUpScreen = () => {
+  const dispatch = useDispatch();
   const [
     signUpUser, // This is the mutation trigger
     {data, error, isLoading: isUpdating}, // This is the destructured mutation result
   ] = useSignUpUserMutation();
 
-  console.log('DAtaad', data, JSON.stringify(error?.data?.email[0]));
+  // console.log('DAtaad', data, JSON.stringify(error?.data?.email[0]));
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');

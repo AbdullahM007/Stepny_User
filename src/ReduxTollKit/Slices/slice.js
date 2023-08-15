@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  userToken: '',
+  userToken: false,
   value: 0,
   locationaccess: true,
   lat: 0,

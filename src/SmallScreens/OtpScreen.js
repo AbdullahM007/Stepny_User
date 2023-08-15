@@ -10,7 +10,10 @@ import {
 import {useOtpConfirmationMutation} from '../ReduxTollKit/Stepney/stepney';
 import {useNavigation} from '@react-navigation/native';
 import OtpInputs from 'react-native-otp-inputs';
+import {useDispatch} from 'react-redux';
+import {storeData} from '../Async/AsyncStorage';
 const OTPScreen = ({route}) => {
+  const dispatch = useDispatch();
   const [
     otpConfirmation, // This is the mutation trigger
     {data, error, isLoading: isUpdating}, // This is the destructured mutation result
@@ -45,7 +48,9 @@ const OTPScreen = ({route}) => {
   };
   React.useEffect(() => {
     if (data) {
-      navigation.navigate('RootNavigator');
+      // storeData('userToken', JSON.stringify(data?.token?.access_token));
+      // dispatch(setToken());
+      // navigation.navigate('RootNavigator');
     } else {
       Alert.alert('', 'Invalid otp');
     }

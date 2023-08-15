@@ -32,15 +32,12 @@ export const HomeMap = props => {
     placeOrder,
     {data: placeOrderData, isLoading: orderLoading, error: orderERROR},
   ] = usePlaceOrderMutation();
-  console.log('placeOrderData', placeOrderData);
+  console.log('placeOrderData', placeOrderData, 'orderERROR', orderERROR);
   const dispatch = useDispatch();
   const [granted, setGranted] = useState(false);
   const latitude = useSelector(state => state.useData.lat);
   const location = useSelector(state => state.useData.location);
   const longitude = useSelector(state => state.useData.lon);
-  useEffect(() => {
-    placeOrder({id: 16});
-  }, []);
 
   const {
     data: AllMechanics,
@@ -202,6 +199,11 @@ export const HomeMap = props => {
       navigation.navigate('MechanicReviewScreen', {mechaData: allFeedBack});
     }
   }, [allFeedBack]);
+
+  const handleHire = item => {
+    // console.log('item', item);
+    placeOrder({mechanic_id: item});
+  };
   return (
     <View>
       {location && (
@@ -301,7 +303,10 @@ export const HomeMap = props => {
 
           <Pressable
             style={styles.hireButton}
-            onPress={() => handleTrackeUSer()}>
+            onPress={
+              () => handleHire(selectedMarker?.id)
+              // handleTrackeUSer()
+            }>
             <Text style={styles.hireButtonText}>Hire?</Text>
           </Pressable>
         </View>
