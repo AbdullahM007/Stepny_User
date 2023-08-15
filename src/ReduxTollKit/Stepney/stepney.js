@@ -4,7 +4,21 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 // Define a service using a base URL and expected endpoints
 export const stepneyApi = createApi({
   reducerPath: 'stepneyApi',
-  baseQuery: fetchBaseQuery({baseUrl: 'https://stepney.onrender.com'}),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'https://stepney.onrender.com',
+    prepareHeaders: async (headers, {getState}) => {
+      // Get your authentication token from state (assuming you store it in Redux)
+      // const token = getState().auth.token;
+      const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkyOTg4OTc5LCJpYXQiOjE2OTIxMjQ5NzksImp0aSI6Ijc2NmJkOWZmZTczNTRjZTliMDgzNWI4ZWUzYjE2MWZiIiwidXNlcl9pZCI6OH0.n9dR2RN0aB1G-H2baTHSeqU8izu1i6nty-HHpf2WdyA'; // await getStorageData('userToken');
+      console.log('token', token);
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+
+      return headers;
+    },
+  }),
   endpoints: builder => ({
     signUpUser: builder.mutation({
       // note: an optional `queryFn` may be used in place of `query`
@@ -36,6 +50,16 @@ export const stepneyApi = createApi({
         };
       },
     }),
+    userHelpSupport: builder.mutation({
+      // note: an optional `queryFn` may be used in place of `query`
+      query: body => {
+        return {
+          url: `/help/`,
+          method: 'POST',
+          body: body,
+        };
+      },
+    }),
   }),
 });
 
@@ -45,4 +69,5 @@ export const {
   useSignUpUserMutation,
   useOtpConfirmationMutation,
   useUserLogInMutation,
+  useUserHelpSupportMutation,
 } = stepneyApi;

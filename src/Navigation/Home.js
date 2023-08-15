@@ -15,23 +15,30 @@ import RootNavigator from './Root';
 import OTPScreen from '../SmallScreens/OtpScreen';
 import MechanicReviewScreen from '../components/HomeMap/MechanicReviewScreen';
 import {getStorageData} from '../Async/AsyncStorage';
+import {useDispatch, useSelector} from 'react-redux';
+import {setToken} from '../ReduxTollKit/Slices/slice';
 const Stack = createStackNavigator();
 const HomeNavigator = props => {
   React.useEffect(() => {
     handleStack();
-  }, []);
+  }, [staySignIn]);
+
+  const dispatch = useDispatch();
+  const useToken = useSelector(state => state.useData.userToken);
+
   const [staySignIn, setStaySignIn] = React.useState(['']);
-  console.log(staySignIn);
   const handleStack = async () => {
     const userToken = await getStorageData('userToken');
     // console.log(userToken);
+    dispatch(setToken(userToken));
     // setStaySignIn(userToken);
   };
+  // console.log('useToken', useToken);
   return (
     <Stack.Navigator
       initialRouteName="Login"
       screenOptions={{headerShown: false}}>
-      {!staySignIn ? (
+      {!useToken ? (
         <Stack.Group>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="SignUp" component={SignUpScreen} />

@@ -1,16 +1,17 @@
 // Need to use the React-specific entry point to import createApi
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import API_URL from '../APIURL/ApiUrl';
+import {getStorageData} from '../../Async/AsyncStorage';
 // Define a service using a base URL and expected endpoints
 export const stepneyUserDetailsApi = createApi({
   reducerPath: 'stepneyUserDetailsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
-    prepareHeaders: (headers, {getState}) => {
+    prepareHeaders: async (headers, {getState}) => {
       // Get your authentication token from state (assuming you store it in Redux)
       // const token = getState().auth.token;
       const token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkyNzg4MjQ0LCJpYXQiOjE2OTE5MjQyNDQsImp0aSI6ImNkYzNmMDc2NjcwYTQxNGRhYWIyY2NkOWY1MDg5NTFiIiwidXNlcl9pZCI6OH0.61psMxEEAbQzx5AhJDv-wOYIRRRZsEHoQUrZtYbSolg';
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkyOTg4OTc5LCJpYXQiOjE2OTIxMjQ5NzksImp0aSI6Ijc2NmJkOWZmZTczNTRjZTliMDgzNWI4ZWUzYjE2MWZiIiwidXNlcl9pZCI6OH0.n9dR2RN0aB1G-H2baTHSeqU8izu1i6nty-HHpf2WdyA'; // await getStorageData('userToken');
       console.log('token', token);
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
@@ -57,7 +58,7 @@ export const stepneyUserDetailsApi = createApi({
       },
     }),
     getAllMechanics: builder.query({
-      query: () => `/findmechanics/${'Gujranwala'}`,
+      query: () => `/findmechanics/${'Gujrat'}`,
     }),
     getAllFeedBack: builder.query({
       query: ({id}) => `/feedbacks/${id}`,

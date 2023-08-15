@@ -46,7 +46,8 @@ export const HomeMap = props => {
     data: AllMechanics,
     error: mechanicError,
     isLoading: MechanicLoading,
-  } = useGetAllMechanicsQuery(1);
+  } = useGetAllMechanicsQuery();
+  console.log(AllMechanics, mechanicError);
   const [userId, setuserId] = useState();
   const {
     data: allFeedBack,
@@ -91,6 +92,7 @@ export const HomeMap = props => {
       requestLocationPermission();
     }, []),
   );
+  console.log('granted', granted);
   // useEffect(() => {
   //   requestLocationPermission();
   // }, []);

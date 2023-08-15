@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {useUserLogInMutation} from '../ReduxTollKit/Stepney/stepney';
 const LoginScreen = () => {
+  const dispatch = useDispatch();
   const [
     userLogIn, // This is the mutation trigger
     {data, error, isLoading}, // This is the destructured mutation result
@@ -39,18 +40,18 @@ const LoginScreen = () => {
     if (data) {
       console.log('data', data?.token?.access_token);
       storeData('userToken', JSON.stringify(data?.token?.access_token));
+      dispatch(data?.token?.access_token);
       // navigation.navigate('RootNavigator');
     } else if (error) {
       Alert.alert('invalid details');
     }
   }, [data, error]);
-  // console.log('dathgjhga'.data, error);
   const handleForgotPassword = () => {
     // Add navigation logic for the Forgot Password screen here.
     // For example, you can navigate to a "ForgotPassword" screen.
     navigation.navigate('Forgot');
   };
-  // console.log('', JSON.stringify(data?.token?.access_token));
+  console.log('sdkjfksd', JSON.stringify(data?.token?.access_token));
   return (
     <View style={styles.container}>
       <Image

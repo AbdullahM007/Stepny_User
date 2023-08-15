@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
+  userToken: '',
   value: 0,
   locationaccess: true,
   lat: 0,
@@ -28,6 +29,9 @@ export const counterSlice = createSlice({
     setLocationaccess: (state, action) => {
       state.locationaccess = action.payload;
     },
+    setToken: (state, action) => {
+      state.userToken = action.payload;
+    },
     setLAtitude: (state, action) => {
       state.lat = action.payload;
     },
@@ -49,6 +53,7 @@ export const {
   incrementByAmount,
   setLocation,
   setLocationaccess,
+  setToken,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
