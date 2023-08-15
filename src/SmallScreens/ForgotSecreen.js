@@ -24,15 +24,25 @@ const ForgotScreen = () => {
     // Add logic for verifying email and sending OTP
     // For simplicity, we're not implementing any logic here.
     forgotPassword({
-      email: 'mechanic1@gmail.com',
+      email: email,
     });
-    alert('Email verification request sent.');
   };
-  console.log('data', data, 'error', error);
+  React.useEffect(() => {
+    if (data) {
+      alert('Email verification request sent.');
+    }
+  }, [data]);
+
+  console.log('data', data, 'error', error, email);
   const handleSignUp = () => {
+    forgotPassword({
+      email: 'usamaansari310@gmail.com',
+      otp: 5039,
+      new_password: '5047504',
+      confirm_password: '5047504',
+    });
     // Add sign-up logic here using APIs, registration, etc.
     // For simplicity, we're not implementing any logic here.
-    alert('Sign-up successful!');
   };
 
   return (
