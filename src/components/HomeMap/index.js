@@ -8,6 +8,10 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
 } from 'react-native';
+
+import PushNotification from 'react-native-push-notification';
+import messaging from '@react-native-firebase/messaging';
+
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {usePlaceOrderMutation} from '../../ReduxTollKit/Stepney/stepneyUser';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -36,15 +40,50 @@ export const HomeMap = props => {
   const dispatch = useDispatch();
   const [granted, setGranted] = useState(false);
   const latitude = useSelector(state => state.useData.lat);
+  const [notificationToken, setNotificationToken] = useState('');
   const location = useSelector(state => state.useData.location);
   const longitude = useSelector(state => state.useData.lon);
+  useEffect(() => {
+    if (!notificationToken) return;
+    SendNotificationstoServer();
+  }, [notificationToken]);
+  const SendNotificationstoServer = React.useCallback(() => {
+    messaging()
+      .getToken()
+      .then(deviceToken => {
+        update({
+          id: userId,
+          device_token: deviceToken,
+        });
+      });
+  }, [userId, notificationToken]);
+  useEffect(() => {
+    pushNoti();
+  }, []);
+  const pushNoti = async () => {
+    // const authStatus = await messaging().requestPermission();
+    // const enabled =
+    //   authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    //   authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION,
+    );
+    if (status === 'granted') {
+      handleListners();
+    }
+  };
 
+  messaging().onMessage(async remoteMessage => {
+    // console.log('Notification push arrived', remoteMessage);
+    PushNotification.localNotification({
+      channelId: 'custom_sound',
+    });
+  });
   const {
     data: AllMechanics,
     error: mechanicError,
     isLoading: MechanicLoading,
   } = useGetAllMechanicsQuery();
-  console.log(AllMechanics, mechanicError);
   const [userId, setuserId] = useState();
   const {
     data: allFeedBack,
@@ -58,7 +97,6 @@ export const HomeMap = props => {
     // Navigate to the desired screen here
     navigation.navigate('DestinationSearchScreen'); // Replace 'DestinationScreen' with the name of the screen you want to navigate to
   };
-  // console.log('loca', originLocation);
   const requestLocationPermission = async () => {
     try {
       await PermissionsAndroid.request(
@@ -89,7 +127,6 @@ export const HomeMap = props => {
       requestLocationPermission();
     }, []),
   );
-  console.log('granted', granted);
   // useEffect(() => {
   //   requestLocationPermission();
   // }, []);
@@ -303,9 +340,9 @@ export const HomeMap = props => {
 
           <Pressable
             style={styles.hireButton}
-            onPress={
-              () => handleHire(selectedMarker?.id)
-              // handleTrackeUSer()
+            onPress={() =>
+              // handleHire(selectedMarker?.id)
+              handleTrackeUSer()
             }>
             <Text style={styles.hireButtonText}>Hire?</Text>
           </Pressable>

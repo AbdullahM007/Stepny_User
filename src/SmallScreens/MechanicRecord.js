@@ -12,8 +12,17 @@ import {useFocusEffect} from '@react-navigation/native';
 import {removeStorageData} from '../Async/AsyncStorage';
 import {useDispatch} from 'react-redux';
 import {setToken} from '../ReduxTollKit/Slices/slice';
-
+import {useGetallOrdersQuery} from '../ReduxTollKit/Stepney/stepneyUser';
 const RecentRidesScreen = () => {
+  const {data, error, isLoading} = useGetallOrdersQuery();
+  const [allOrders, setAllOrders] = useState();
+  console.log('RecentRidesScreen', JSON.stringify(allOrders));
+  useEffect(() => {
+    if (data) {
+      setAllOrders(data?.orders);
+    }
+  }, [data]);
+
   // Sample data for recent rides
   const dispatch = useDispatch();
   const [recentRides, setRecentRides] = useState([
@@ -102,7 +111,7 @@ const RecentRidesScreen = () => {
     // <ImageBackground source={require('../assets/Images/6.jpg')} style={styles.backgroundImage}>
     <View style={styles.container}>
       <FlatList
-        data={recentRides}
+        data={allOrders}
         renderItem={renderRecentRideItem}
         keyExtractor={item => item.id}
       />

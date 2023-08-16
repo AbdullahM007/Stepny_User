@@ -68,6 +68,9 @@ export const stepneyUserDetailsApi = createApi({
     getUserProfile: builder.query({
       query: () => `/profile/`,
     }),
+    getallOrders: builder.query({
+      query: () => `/orders/`,
+    }),
   }),
 });
 
@@ -80,4 +83,5 @@ export const {
   useForgotPasswordMutation,
   useGetUserProfileQuery,
   usePlaceOrderMutation,
+  useGetallOrdersQuery,
 } = stepneyUserDetailsApi;

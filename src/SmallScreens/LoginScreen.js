@@ -38,9 +38,10 @@ const LoginScreen = () => {
   // console.log('datadata:', data?.token?.access_token);
 
   React.useEffect(() => {
-    if (data) {
-      console.log('data', data?.token?.access_token);
+    if (data && !error) {
       storeData('userToken', data?.token?.access_token);
+      console.log('CALLSLogIn');
+
       dispatch(setToken(true));
       // navigation.navigate('RootNavigator');
     } else if (error) {

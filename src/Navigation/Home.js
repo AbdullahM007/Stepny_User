@@ -29,11 +29,18 @@ const HomeNavigator = props => {
   const [staySignIn, setStaySignIn] = React.useState(['']);
   const handleStack = async () => {
     const userToken = await getStorageData('userToken');
+    if (userToken !== null) {
+      console.log('CALLS');
+      dispatch(setToken(true));
+    }
     // console.log(userToken);
-    dispatch(setToken(true));
-    // setStaySignIn(userToken);
+    setStaySignIn(userToken);
   };
-  // console.log('useToken', useToken);
+  // React.useEffect(() => {
+
+  // }, [staySignIn]);
+
+  // console.log('useToken', staySignIn, useToken);
   return (
     <Stack.Navigator
       initialRouteName="Login"
