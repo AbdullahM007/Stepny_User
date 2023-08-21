@@ -16,7 +16,7 @@ import {useGetallOrdersQuery} from '../ReduxTollKit/Stepney/stepneyUser';
 const RecentRidesScreen = () => {
   const {data, error, isLoading} = useGetallOrdersQuery();
   const [allOrders, setAllOrders] = useState();
-  console.log('RecentRidesScreen', JSON.stringify(allOrders));
+  console.log('RecentRidesScreen', JSON.stringify(data));
   useEffect(() => {
     if (data) {
       setAllOrders(data?.orders);

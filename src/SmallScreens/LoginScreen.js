@@ -13,7 +13,7 @@ import {storeData} from '../Async/AsyncStorage';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {useUserLogInMutation} from '../ReduxTollKit/Stepney/stepney';
-import {setToken} from '../ReduxTollKit/Slices/slice';
+import {setToken, setUserId} from '../ReduxTollKit/Slices/slice';
 const LoginScreen = () => {
   const dispatch = useDispatch();
   const [
@@ -40,9 +40,12 @@ const LoginScreen = () => {
   React.useEffect(() => {
     if (data && !error) {
       storeData('userToken', data?.token?.access_token);
-      console.log('CALLSLogIn');
+      // storeData('userId', data?.token?.id);
+
+      console.log('CALLSLogIn', data?.token?.id);
 
       dispatch(setToken(true));
+      dispatch(setUserId(data?.token?.id));
       // navigation.navigate('RootNavigator');
     } else if (error) {
       Alert.alert('invalid details');

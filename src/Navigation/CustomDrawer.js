@@ -9,7 +9,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const CustomDrawer = props => {
   const {data, error, isLoading} = useGetUserProfileQuery(null);
-  console.log('User profile', data);
+  // console.log('User profile', data);
   const navigation = useNavigation();
   const handleLogout = () => {
     console.warn('Log Out');
@@ -46,10 +46,12 @@ const CustomDrawer = props => {
               marginRight: 12,
             }}
           /> */}
-          <Image
-            style={{width: 50, height: 50, borderRadius: 300}}
-            source={{uri: userProfile?.profile_picture}}
-          />
+          {userProfile && (
+            <Image
+              style={{width: 50, height: 50, borderRadius: 300}}
+              source={{uri: userProfile?.profile_picture}}
+            />
+          )}
           <View>
             <Text style={{color: 'white', fontSize: 24}}>
               {userProfile?.first_name + userProfile?.last_name}

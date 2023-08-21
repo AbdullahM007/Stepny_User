@@ -22,6 +22,8 @@ export const stepneyUserDetailsApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ['userData'],
+
   endpoints: builder => ({
     updateUserProfile: builder.mutation({
       // note: an optional `queryFn` may be used in place of `query`
@@ -43,6 +45,8 @@ export const stepneyUserDetailsApi = createApi({
           url: `/resetpassword/`,
           method: 'POST',
           body: body,
+          providesTags: ['userData'],
+
           // headers: {'Content-Type': 'application/json'},
         };
       },
@@ -55,21 +59,40 @@ export const stepneyUserDetailsApi = createApi({
           url: `/order/`,
           method: 'POST',
           body: body,
+          providesTags: ['userData'],
+
           // headers: {'Content-Type': 'application/json'},
+        };
+      },
+    }),
+    setDeviceToken: builder.mutation({
+      // note: an optional `queryFn` may be used in place of `query`
+      query: body => {
+        // console.log('ERRRODATE', body);
+        return {
+          url: `/setdevicetoken/`,
+          method: 'PUT',
+          body: body,
+          // headers: {'Content-Type': 'application/json'},
+          providesTags: ['userData'],
         };
       },
     }),
     getAllMechanics: builder.query({
       query: () => `/findmechanics/${'Gujrat'}`,
+      invalidatesTags: ['userData'],
     }),
     getAllFeedBack: builder.query({
       query: ({id}) => `/feedbacks/${id}`,
+      invalidatesTags: ['userData'],
     }),
     getUserProfile: builder.query({
       query: () => `/profile/`,
+      invalidatesTags: ['userData'],
     }),
     getallOrders: builder.query({
       query: () => `/orders/`,
+      invalidatesTags: ['userData'],
     }),
   }),
 });
@@ -84,4 +107,5 @@ export const {
   useGetUserProfileQuery,
   usePlaceOrderMutation,
   useGetallOrdersQuery,
+  useSetDeviceTokenMutation,
 } = stepneyUserDetailsApi;

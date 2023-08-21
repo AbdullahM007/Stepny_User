@@ -11,7 +11,7 @@ import {
 
 import PushNotification from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
-
+import {useSetDeviceTokenMutation} from '../../ReduxTollKit/Stepney/stepneyUser';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {usePlaceOrderMutation} from '../../ReduxTollKit/Stepney/stepneyUser';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -37,12 +37,17 @@ export const HomeMap = props => {
     {data: placeOrderData, isLoading: orderLoading, error: orderERROR},
   ] = usePlaceOrderMutation();
   console.log('placeOrderData', placeOrderData, 'orderERROR', orderERROR);
+
   const dispatch = useDispatch();
   const [granted, setGranted] = useState(false);
   const latitude = useSelector(state => state.useData.lat);
   const [notificationToken, setNotificationToken] = useState('');
   const location = useSelector(state => state.useData.location);
   const longitude = useSelector(state => state.useData.lon);
+  const UserId = useSelector(state => state.useData.userId);
+  const [setDeviceToken, {data: DeviceToken, error: TokenError}] =
+    useSetDeviceTokenMutation();
+  console.log('userId: ', UserId);
   useEffect(() => {
     if (!notificationToken) return;
     SendNotificationstoServer();
@@ -50,29 +55,79 @@ export const HomeMap = props => {
   const SendNotificationstoServer = React.useCallback(() => {
     messaging()
       .getToken()
-      .then(deviceToken => {
-        update({
-          id: userId,
+      .then(deviceToken =>
+        setDeviceToken({
+          id: UserId,
           device_token: deviceToken,
-        });
-      });
-  }, [userId, notificationToken]);
-  useEffect(() => {
-    pushNoti();
-  }, []);
-  const pushNoti = async () => {
-    // const authStatus = await messaging().requestPermission();
-    // const enabled =
-    //   authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    //   authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION,
-    );
-    if (status === 'granted') {
-      handleListners();
-    }
-  };
+        }),
+      );
+  }, [notificationToken]);
+  // useEffect(() => {
+  //   pushNoti();
+  // }, []);
 
+  async function handleListners() {
+    await PushNotification.configure({
+      onRegister: function (token) {
+        setNotificationToken(token?.token);
+      },
+      onNotification: function (notification: any) {
+        const idd = notification.data;
+        // dispatch(setShowRedIocn(true));
+        if (notification?.data?.type === 'message') {
+          // dispatch(setShowMessageRedIcon(true));
+        }
+        try {
+          if (notification?.userInteraction) {
+            if (notification?.data?.type === 'message') {
+              navigation.navigate('ChatList');
+            } else {
+              navigation.navigate('IncomingNotifications');
+            }
+            // navigation.navigate("IncomingNotifications")
+          }
+          // else if ()
+        } catch (err) {
+          console.log('error while handling action', err);
+        }
+      },
+    });
+
+    // for foreground msg listner
+    messaging().onMessage(async (remoteMessage: any) => {
+      // console.log('Notification push arrived', remoteMessage);
+      PushNotification.localNotification({
+        channelId: 'custom_sound',
+      });
+    });
+    // app opened from background state
+    messaging().onNotificationOpenedApp(async (remoteMessage: any) => {
+      // console.log('Notification push opened app', remoteMessage);
+    });
+
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      // console.log('Notification push setBackgroun', remoteMessage);
+    });
+    messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage: any) => {
+        if (remoteMessage) {
+        }
+      });
+  }
+  // const pushNoti = async () => {
+  //   // const authStatus = await messaging().requestPermission();
+  //   // const enabled =
+  //   //   authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //   //   authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  //   const status = await PermissionsAndroid.request(
+  //     PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION,
+  //   );
+  //   if (status === 'granted') {
+  //     handleListners();
+  //     console.log(status);
+  //   }
+  // };
   messaging().onMessage(async remoteMessage => {
     // console.log('Notification push arrived', remoteMessage);
     PushNotification.localNotification({
@@ -91,7 +146,7 @@ export const HomeMap = props => {
     isLoading: feedBackLoading,
   } = useGetAllFeedBackQuery({id: userId});
   const [originLocation, setUserLocation] = useState({lat: 0, lon: 0});
-
+  console.log('DeviceToken', DeviceToken, JSON.stringify(TokenError));
   const navigation = useNavigation();
   const handleHireButtonPress = () => {
     // Navigate to the desired screen here
@@ -107,7 +162,7 @@ export const HomeMap = props => {
           'PermissionsAndroid.RESULTS.GRANTED',
           PermissionsAndroid.RESULTS.GRANTED,
         );
-
+        handleListners();
         setGranted(true);
       } else {
         setGranted(false);
@@ -238,7 +293,6 @@ export const HomeMap = props => {
   }, [allFeedBack]);
 
   const handleHire = item => {
-    // console.log('item', item);
     placeOrder({mechanic_id: item});
   };
   return (
@@ -340,9 +394,9 @@ export const HomeMap = props => {
 
           <Pressable
             style={styles.hireButton}
-            onPress={() =>
-              // handleHire(selectedMarker?.id)
-              handleTrackeUSer()
+            onPress={
+              () => handleHire(selectedMarker?.id)
+              // handleTrackeUSer()
             }>
             <Text style={styles.hireButtonText}>Hire?</Text>
           </Pressable>

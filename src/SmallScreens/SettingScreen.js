@@ -15,7 +15,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useTheme} from '@react-navigation/native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useUpdateUserProfileMutation} from '../ReduxTollKit/Stepney/stepneyUser';
+import {useGetUserProfileQuery} from '../ReduxTollKit/Stepney/stepneyUser';
 const SettingScreen = () => {
+  const {data: getProfile, error: ProfileErroe} = useGetUserProfileQuery(null);
   const [
     updateUserProfile, // This is the mutation trigger
     {data, error, isLoading}, // This is the destructured mutation result
@@ -32,14 +34,14 @@ const SettingScreen = () => {
   });
 
   // State variables to store updated data
-  const [firstName, setFirstName] = useState(userData.firstName);
-  const [lastName, setLastName] = useState(userData.lastName);
-  const [phoneCountryCode, setPhoneCountryCode] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState(userData.phoneNumber);
+  const [firstName, setFirstName] = useState(getProfile?.first_name);
+  const [lastName, setLastName] = useState(getProfile?.last_name);
+  const [phoneCountryCode, setPhoneCountryCode] = useState('+92');
+  const [phoneNumber, setPhoneNumber] = useState(getProfile?.contact);
   const [address, setAddress] = useState('');
-  const [city, setCity] = useState(userData.city);
+  const [city, setCity] = useState(getProfile?.city);
   // const [Service, setService] = useState('');
-  const [profilePic, setProfilePic] = useState(userData.profilePic);
+  const [profilePic, setProfilePic] = useState(getProfile?.profile_picture);
   const [value, setValue] = useState(null);
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
@@ -83,7 +85,7 @@ const SettingScreen = () => {
       firstName.trim() === '' ||
       lastName.trim() === '' ||
       phoneNumber.trim() === '' ||
-      address.trim() === '' ||
+      // address.trim() === '' ||
       city.trim() === ''
       // Service.trim() === ''
     ) {
@@ -104,21 +106,20 @@ const SettingScreen = () => {
       profilePic,
     });
     updateUserProfile({
-      first_name: 'Usama544',
-      last_name: 'Iqbal',
-      contact: '03242233',
-      city: 'Gujrat',
-      address: 'Staff Gala, Gujrat',
+      first_name: firstName,
+      last_name: lastName,
+      contact: phoneNumber,
+      city: city,
+      profile_picture: ImageUrl,
     });
   };
   React.useEffect(() => {
-    if (data) {
+    if (data && !error) {
       alert('Profile updated successfully!');
     } else if (error) {
       Alert.alert('', 'Please Provide Proper Details');
     }
   }, [data, error]);
-  console.log('UPDATE', data, error);
   // Function to handle profile picture selection
   const handleChooseProfilePic = () => {
     const options = {
@@ -218,7 +219,7 @@ const SettingScreen = () => {
         {ImageUrl ? (
           <Image
             source={{
-              uri: `data:image/png;base64,${ImageUrl}`,
+              uri: `data:image/png;base64,${profilePic}`,
             }}
             // source={profilePic}
             style={styles.profilePic}
@@ -312,14 +313,14 @@ const SettingScreen = () => {
       </Text>
 
       {/* Email */}
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         value={address}
         onChangeText={setAddress}
         placeholder="Address"
         // keyboardType="address-address"
         placeholderTextColor="black" // Set placeholder text color to black
-      />
+      /> */}
 
       {/* City */}
       <Dropdown
