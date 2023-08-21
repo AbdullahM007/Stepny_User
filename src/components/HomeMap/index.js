@@ -209,7 +209,7 @@ export const HomeMap = props => {
         console.error('dfdgdg', error.code, error.message);
         dispatch(setLocationaccess(false));
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      {enableHighAccuracy: true, timeout: 30000, maximumAge: 10000},
     );
   }
   useEffect(() => {
@@ -318,7 +318,7 @@ export const HomeMap = props => {
 
           {AllMechanics?.map(item => (
             <Marker
-              // key={car.id}
+            key={item.id} 
               coordinate={{latitude: item.latitude, longitude: item.longitude}}
               onPress={() => handleMarkerPress(item)} // Add onPress event
             >

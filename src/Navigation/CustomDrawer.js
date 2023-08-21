@@ -27,7 +27,7 @@ const CustomDrawer = props => {
 
   return (
     <DrawerContentScrollView {...props} style={{backgroundColor: 'black'}}>
-      <View style={{flex: 1, backgroundColor: 'black'}}>
+      <View style={{flex: 1, backgroundColor: 'black', position: 'relative'}}>
         {/* user Row */}
         <View
           style={{
@@ -91,18 +91,20 @@ const CustomDrawer = props => {
       </View>
       <View
         style={{
-          borderTopWidth: 1,
-          borderTopColor: '#919191',
-          borderBottomWidth: 1,
-          borderBottomColor: '#919191',
-          paddingVertical: 10,
+      alignSelf:'baseline',
+      bottom: 0,
+      width: '100%',
+      borderTopWidth: 1,
+      borderTopColor: '#919191',
+      borderBottomWidth: 1,
+      borderBottomColor: '#919191',
         }}>
         <Pressable
           onPress={handleLogout}
           style={{
             backgroundColor: '#EF5350',
             paddingVertical: 10,
-            marginTop: 390,
+          
           }}>
           <Text style={{color: 'white', textAlign: 'center', fontSize: 16}}>
             Log Out

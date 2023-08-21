@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, Image, Pressable, Alert} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, Image, Pressable, Alert, TextInput} from 'react-native'; // Import TextInput
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import cars from '../../assets/data/cars';
 import styles from './styles';
@@ -7,17 +7,25 @@ import {useNavigation} from '@react-navigation/native';
 
 export const OrderScreen = props => {
   const navigation = useNavigation();
+  const [reviewVisible, setReviewVisible] = useState(false); // State to manage review visibility
+  const [rating, setRating] = useState(5); // State to store user's rating
+  const [description, setDescription] = useState(''); // State to store user's description
+
   const orderFulfilled = () => {
     Alert.alert('', 'Are You Sure!! Your car is Fixed', [
       {
         text: 'Yes',
-        onPress: () => navigation.navigate('Home'),
+        onPress: () => setReviewVisible(true), // Show review input after confirming car is fixed
       },
       {
         text: 'No',
         style: 'cancel',
       },
     ]);
+  };
+  const submitReview = () => {
+    // Process the review and navigate back to Home screen
+    navigation.navigate('Home');
   };
   const onCancel = async () => {
     Alert.alert('', 'Are You Sure you want to cancel Service', [
@@ -100,6 +108,26 @@ export const OrderScreen = props => {
           </Text>
         </Pressable>
       </View>
+      {reviewVisible && (
+        <View style={styles.reviewContainer}>
+          <Text style={styles.reviewHeading}>Please provide your review</Text>
+          <TextInput
+            style={styles.reviewTextInput}
+            placeholder="Rating (1-5)"
+            onChangeText={text => setRating(parseInt(text))}
+            keyboardType="numeric"
+            maxLength={1}
+          />
+          <TextInput
+            style={styles.reviewTextInput}
+            placeholder="Description"
+            onChangeText={text => setDescription(text)}
+          />
+          <Pressable onPress={submitReview} style={styles.reviewButton}>
+            <Text style={styles.reviewButtonText}>Submit Review</Text>
+          </Pressable>
+        </View>
+      )}
     </>
   );
 };
