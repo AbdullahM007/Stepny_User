@@ -142,7 +142,7 @@ const SettingScreen = () => {
       }
     });
   };
-
+  console.log('Profile', profilePic);
   const handleFirstNameInput = text => {
     // Allow only alphabets (A-Za-z) and remove other characters
     setFirstName(text.replace(/[^A-Za-z]/g, ''));
@@ -208,7 +208,7 @@ const SettingScreen = () => {
       mediaType: 'photo',
       includeBase64: true,
     });
-    setImageUrl(result.assets?.[0]?.base64 || '');
+    setProfilePic(result.assets?.[0]?.base64 || '');
   }, [ImageUrl]);
   return (
     <View style={styles.container}>

@@ -27,7 +27,7 @@ const SearchResultScreen = props => {
     Alert.alert('Hurray', 'Your order is submitted', [
       {
         text: 'Track Order',
-        onPress: () => completeOrder,
+        onPress: () => completeOrder(),
         // navigation.navigate('OrderScreen'),
       },
     ]);
