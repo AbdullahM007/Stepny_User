@@ -13,7 +13,7 @@ import PushNotification from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
 import {
   useSetDeviceTokenMutation,
-  useUpdateLocationMutation,
+  useGetallOrdersQuery,
   useGetAllFeedBackQuery,
   useGetAllMechanicsQuery,
   usePlaceOrderMutation,
@@ -48,6 +48,7 @@ export const HomeMap = props => {
   const UserId = useSelector(state => state.useData.userId);
   const [setDeviceToken, {data: DeviceToken, error: TokenError}] =
     useSetDeviceTokenMutation();
+
   console.log('userId: ', UserId);
   useEffect(() => {
     if (!notificationToken) return;
@@ -148,6 +149,8 @@ export const HomeMap = props => {
   } = useGetAllFeedBackQuery({id: userId});
   const [originLocation, setUserLocation] = useState({lat: 0, lon: 0});
   console.log('DeviceToken', DeviceToken, JSON.stringify(TokenError));
+  const {data: allOrder, error: orderError} = useGetallOrdersQuery();
+  console.log('location', allOrder);
   const navigation = useNavigation();
   const handleHireButtonPress = () => {
     // Navigate to the desired screen here
@@ -280,6 +283,16 @@ export const HomeMap = props => {
       setdestinationPlace(selectedMarker);
     }
   }, [selectedMarker]);
+  useEffect(() => {
+    if (allOrder && selectedMarker) {
+      allOrder.orders.forEach(order => {
+        if (order.status === 'accepted') {
+          handleTrackeUSer();
+        }
+      });
+    }
+  }, [allOrder]);
+
   const handleTrackeUSer = () => {
     navigation.navigate('SearchResultScreen', {
       originLocation,
@@ -376,7 +389,8 @@ export const HomeMap = props => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('DestinationSearchScreen')}>
+              // onPress={() => navigation.navigate('DestinationSearchScreen')}
+              >
                 <Text
                   style={{
                     backgroundColor:
@@ -394,10 +408,11 @@ export const HomeMap = props => {
           </View>
 
           <Pressable
+            disabled={selectedMarker?.status === false ? true : false}
             style={styles.hireButton}
-            onPress={
-              () => handleHire(selectedMarker?.id)
-              // handleTrackeUSer()
+            onPress={() =>
+              // handleHire(selectedMarker?.id)
+              handleTrackeUSer()
             }>
             <Text style={styles.hireButtonText}>Hire?</Text>
           </Pressable>

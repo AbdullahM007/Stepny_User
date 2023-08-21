@@ -11,10 +11,10 @@ export default [
     price: 800,
     duration: 30,
   },
-  {
-    id: '2',
-    type: 'Car Towing ',
-    price: 3000,
-    duration: 27,
-  },
-]
+  // {
+  //   id: '2',
+  //   type: 'Car Towing ',
+  //   price: 3000,
+  //   duration: 27,
+  // },
+];

@@ -51,6 +51,20 @@ export const stepneyUserDetailsApi = createApi({
         };
       },
     }),
+    completeOrder: builder.mutation({
+      // note: an optional `queryFn` may be used in place of `query`
+      query: ({body}) => {
+        console.log('ERRRODATE', body);
+        return {
+          url: `/ordercomplete/`,
+          method: 'POST',
+          body: body,
+          providesTags: ['userData'],
+
+          // headers: {'Content-Type': 'application/json'},
+        };
+      },
+    }),
     placeOrder: builder.mutation({
       // note: an optional `queryFn` may be used in place of `query`
       query: body => {
@@ -122,4 +136,5 @@ export const {
   usePlaceOrderMutation,
   useGetallOrdersQuery,
   useSetDeviceTokenMutation,
+  useCompleteOrderMutation,
 } = stepneyUserDetailsApi;

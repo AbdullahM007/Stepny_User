@@ -5,10 +5,13 @@ import OurServices from '../../components/OurServices';
 import RouteMap from '../../components/RouteMap';
 import {useRoute, useNavigation} from '@react-navigation/native';
 
+import {useCompleteOrderMutation} from '../../ReduxTollKit/Stepney/stepneyUser';
 const SearchResultScreen = props => {
   const typeState = useState(null);
   const route = useRoute();
   const navigation = useNavigation();
+  const [completeOrder, {data, error}] = useCompleteOrderMutation();
+  console.log('DATA', data, error);
   const onSubmit = async () => {
     const [type] = typeState;
     if (!type) {
@@ -24,7 +27,8 @@ const SearchResultScreen = props => {
     Alert.alert('Hurray', 'Your order is submitted', [
       {
         text: 'Track Order',
-        onPress: () => navigation.navigate('OrderScreen'),
+        onPress: () => completeOrder,
+        // navigation.navigate('OrderScreen'),
       },
     ]);
   };
@@ -38,7 +42,7 @@ const SearchResultScreen = props => {
           <RouteMap origin={originLocation} destination={destinationPlace} />
         </View>
       }
-      <View style={{height: 400 /*backgroundColor:'rgb(255, 216, 0)'*/}}>
+      <View style={{height: 200 /*backgroundColor:'rgb(255, 216, 0)'*/}}>
         <OurServices typeState={typeState} onSubmit={onSubmit} />
       </View>
     </View>

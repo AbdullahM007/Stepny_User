@@ -216,7 +216,7 @@ const SettingScreen = () => {
       <TouchableOpacity
         style={{marginBottom: 20}}
         onPress={() => handlePickImage()}>
-        {ImageUrl ? (
+        {profilePic ? (
           <Image
             source={{
               uri: `data:image/png;base64,${profilePic}`,
