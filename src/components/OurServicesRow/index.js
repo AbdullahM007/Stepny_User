@@ -27,9 +27,9 @@ const OurServicesRow = props => {
       <View style={styles.middleContainer}>
         <Text style={styles.type}>
           {' '}
-          {type.type} <Ionicons name="person" size={16} /> 3
+          {type.type} <Ionicons name="person" size={16} /> 
         </Text>
-        <Text style={styles.time}> 8:03PM Drop Off</Text>
+        {/* <Text style={styles.time}> 8:03PM Drop Off</Text> */}
       </View>
       <View style={styles.rightContainer}>
         <Ionicons name="pricetag" size={18} color={'red'} />

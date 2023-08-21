@@ -5,7 +5,7 @@ import cars from '../../assets/data/cars';
 import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
 
-export const OrderScreen = props => {
+export const OrderScreen = () => {
   const navigation = useNavigation();
   const [reviewVisible, setReviewVisible] = useState(false); // State to manage review visibility
   const [rating, setRating] = useState(5); // State to store user's rating
@@ -48,7 +48,7 @@ export const OrderScreen = props => {
   };
   return (
     <>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <Text style={styles.ordertext}>Your Mechanic is on the way</Text>
       </View>
 
@@ -107,8 +107,8 @@ export const OrderScreen = props => {
             Cancel Service
           </Text>
         </Pressable>
-      </View>
-      {reviewVisible && (
+      </View> */}
+      {/* {reviewVisible && ( */}
         <View style={styles.reviewContainer}>
           <Text style={styles.reviewHeading}>Please provide your review</Text>
           <TextInput
@@ -127,7 +127,7 @@ export const OrderScreen = props => {
             <Text style={styles.reviewButtonText}>Submit Review</Text>
           </Pressable>
         </View>
-      )}
+      {/* )} */}
     </>
   );
 };

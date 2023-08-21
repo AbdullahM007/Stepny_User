@@ -4,19 +4,23 @@ import HomeMap from '../../components/HomeMap';
 import OurServices from '../../components/OurServices';
 import RouteMap from '../../components/RouteMap';
 import {useRoute, useNavigation} from '@react-navigation/native';
-
+import { useSelector } from 'react-redux';
 import {useCompleteOrderMutation} from '../../ReduxTollKit/Stepney/stepneyUser';
+import OrderScreen from '../OrderScreen';
 const SearchResultScreen = props => {
   const typeState = useState(null);
+  const UserId = useSelector(state => state.useData.userId);
+console.log(UserId);
   const route = useRoute();
   const navigation = useNavigation();
   const [completeOrder, {data, error}] = useCompleteOrderMutation();
   console.log('DATA', data, error);
+
   const onSubmit = async () => {
     const [type] = typeState;
-    if (!type) {
-      return;
-    }
+    // if (!type) {
+    //   return;
+    // }
     // Submit to server
     // try {
     //   const input= {
@@ -24,10 +28,13 @@ const SearchResultScreen = props => {
     //     originLatitude
     //   }
     // }
-    Alert.alert('Hurray', 'Your order is submitted', [
+    Alert.alert('', 'Are You Sure Your order is Completed ?', [
       {
-        text: 'Track Order',
-        onPress: () => completeOrder,
+        text: 'Cancel',
+      },
+      {
+        text: 'ok',
+        onPress: () => { completeOrder({id:UserId})},
         // navigation.navigate('OrderScreen'),
       },
     ]);
@@ -38,13 +45,18 @@ const SearchResultScreen = props => {
   return (
     <View style={{display: 'flex', justifyContent: 'space-between'}}>
       {
-        <View style={{height: Dimensions.get('window').height - 400}}>
+        <View style={{height: Dimensions.get('window').height }}>
           <RouteMap origin={originLocation} destination={destinationPlace} />
         </View>
       }
+      {data && 
+      <View style={{position:'absolute', backgroundColor :'white', alignSelf:'center'}} >
+<OrderScreen/>
+</View>
+      }{!data &&
       <View style={{height: 200 /*backgroundColor:'rgb(255, 216, 0)'*/}}>
         <OurServices typeState={typeState} onSubmit={onSubmit} />
-      </View>
+      </View>}
     </View>
   );
 };

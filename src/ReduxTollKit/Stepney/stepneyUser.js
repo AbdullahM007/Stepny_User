@@ -53,7 +53,7 @@ export const stepneyUserDetailsApi = createApi({
     }),
     completeOrder: builder.mutation({
       // note: an optional `queryFn` may be used in place of `query`
-      query: ({body}) => {
+      query: (body) => {
         console.log('ERRRODATE', body);
         return {
           url: `/ordercomplete/`,

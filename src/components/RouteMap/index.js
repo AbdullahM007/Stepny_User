@@ -5,7 +5,7 @@ import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import {useDispatch, useSelector} from 'react-redux';
 import Geolocation from '@react-native-community/geolocation';
-import {setLocation} from '../../ReduxTollKit/Slices/slice';
+import {setLocation, setLocationaccess} from '../../ReduxTollKit/Slices/slice';
 const GOOGLE_MAPS_APIKEY = 'AIzaSyBAo0ueJdL4wZYYrGFFBVbEuziCLDyQhN8';
 
 const RouteMap = ({origin, destination}) => {

@@ -213,7 +213,7 @@ export const HomeMap = props => {
         console.error('dfdgdg', error.code, error.message);
         dispatch(setLocationaccess(false));
       },
-      {enableHighAccuracy: true, timeout: 30000, maximumAge: 10000},
+      {enableHighAccuracy: false, timeout: 300000, maximumAge: 10000},
     );
   }
   useEffect(() => {
