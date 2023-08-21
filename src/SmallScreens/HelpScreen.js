@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useCallback} from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -10,16 +10,19 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {useIsFocused} from '@react-navigation/native'; // Import useIsFocused hook
-import {useUserHelpSupportMutation} from '../ReduxTollKit/Stepney/stepney';
+import { useIsFocused } from '@react-navigation/native'; 
+import { useUserHelpSupportMutation } from '../ReduxTollKit/Stepney/stepney';
+
 const HelpScreen = () => {
+  const MAX_CHARACTER_COUNT = 150;
+  
+  const [characterCount, setCharacterCount] = useState(MAX_CHARACTER_COUNT);
   const [userHelpSupport, {data, error, isLoading}] =
     useUserHelpSupportMutation();
-  const isFocused = useIsFocused(); // Get the focused state of the component
+  const isFocused = useIsFocused(); 
   const bounceValue = useRef(new Animated.Value(-100)).current;
 
   const startBounceAnimation = useCallback(() => {
-    // Start the animation
     Animated.timing(bounceValue, {
       toValue: 0,
       duration: 1000,
@@ -30,22 +33,32 @@ const HelpScreen = () => {
 
   useEffect(() => {
     if (isFocused) {
-      // Reset the animation value when the component is focused
       bounceValue.setValue(-100);
       startBounceAnimation();
     }
   }, [isFocused, bounceValue, startBounceAnimation]);
 
-  // Interpolate the animated value to apply translation on the X-axis
   const animatedStyle = {
     transform: [{translateX: bounceValue}],
   };
+
   const [helcenter, setHelcenter] = React.useState('');
+
   const handleSendMessage = () => {
-    setHelcenter('');
-    userHelpSupport({message: helcenter});
+    if (characterCount >= 0) {
+      setHelcenter('');
+      userHelpSupport({ message: helcenter });
+    } else {
+      Alert.alert('', 'You have exceeded the character limit (150 characters)');
+    }
   };
-  console.log('data', data, error);
+
+  const handleTextChange = (text) => {
+    setHelcenter(text);
+    const remainingCharacters = MAX_CHARACTER_COUNT - text.length;
+    setCharacterCount(remainingCharacters);
+  };
+
   useEffect(() => {
     if (data) {
       Alert.alert('', 'Your Message has been sent ');
@@ -54,22 +67,32 @@ const HelpScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Provide the relative path of the local image */}
-
       <Image source={require('../assets/Images/2.jpg')} style={styles.image} />
+
+      <Text style={styles.messageText}>
+        Your Message to Our Support
+      </Text>
+
       <TextInput
         style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#000" // Set the placeholder text color to black
-        secureTextEntry={true}
+        placeholder="Type your message here..."
+        placeholderTextColor="#000"
+        multiline={true}
         value={helcenter}
-        onChangeText={text => setHelcenter(text)}
+        onChangeText={handleTextChange}
+        maxLength={MAX_CHARACTER_COUNT} 
+        textAlignVertical="top"
+        underlineColorAndroid="transparent"
       />
-      <TouchableOpacity
-        onPress={() => handleSendMessage()}
-        style={styles.signupButton}>
+      
+      <Text style={styles.characterCountText}>
+        {characterCount >= 0 ? `${characterCount} characters left` : 'Character limit exceeded'}
+      </Text>
+
+      <TouchableOpacity onPress={() => handleSendMessage()} style={styles.signupButton}>
         <Text>Send</Text>
       </TouchableOpacity>
+
       <Animated.Text style={[styles.text, animatedStyle]}>
         To get in touch with the Stepney Customer Support Team {'\n\n'}
         Dial 111 300 300 {'\n\n'}
@@ -102,7 +125,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '90%',
-    height: 40,
+    height: 80,
     borderColor: '#ccc',
     borderWidth: 1,
     marginTop: 10,
@@ -119,6 +142,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     marginBottom: 10,
+  },
+  characterCountText: {
+    fontSize: 12,
+    alignSelf: 'flex-end',
+    marginRight: 20,
+    marginBottom: 10,
+    color: '#777',
+  },
+  messageText: {
+    fontSize: 18,
+    marginBottom: 5,
+    alignSelf: 'center',
+    marginLeft: 20,
+    color:'red'
   },
 });
 

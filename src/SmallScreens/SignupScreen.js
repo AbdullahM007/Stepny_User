@@ -288,6 +288,7 @@ const styles = StyleSheet.create({
   input: {
     width: '90%',
     height: 40,
+    color:'black',
     borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 10,
@@ -337,6 +338,7 @@ const styles = StyleSheet.create({
   phoneNumber: {
     width: '70%',
     height: 40,
+    color:'black',
     borderColor: '#ccc',
     borderWidth: 1,
     borderTopRightRadius: 10,

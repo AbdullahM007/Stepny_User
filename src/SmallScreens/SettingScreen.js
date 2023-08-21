@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#d4d4d8',
+    backgroundColor: '#BDBDBD',
   },
   profilePic: {
     width: 150,
@@ -415,13 +415,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   updateButton: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,
   },
   buttonText: {
-    color: 'black',
+    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },

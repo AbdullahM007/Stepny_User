@@ -26,8 +26,8 @@ const CustomDrawer = props => {
   }, [data]);
 
   return (
-    <DrawerContentScrollView {...props} style={{backgroundColor: '#a52a2a'}}>
-      <View style={{flex: 1, backgroundColor: '#a52a2a'}}>
+    <DrawerContentScrollView {...props} style={{backgroundColor: 'black'}}>
+      <View style={{flex: 1, backgroundColor: 'black'}}>
         {/* user Row */}
         <View
           style={{
