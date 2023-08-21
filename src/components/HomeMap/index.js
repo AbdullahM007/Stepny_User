@@ -410,10 +410,10 @@ export const HomeMap = props => {
           <Pressable
             disabled={selectedMarker?.status === false ? true : false}
             style={styles.hireButton}
-            onPress={() =>
-              // handleHire(selectedMarker?.id)
-              handleTrackeUSer()
-            }>
+            onPress={() => {
+              handleTrackeUSer();
+              handleHire(selectedMarker?.id);
+            }}>
             <Text style={styles.hireButtonText}>Hire?</Text>
           </Pressable>
         </View>
