@@ -6,14 +6,14 @@ import {
 } from '@react-navigation/drawer';
 import {useGetUserProfileQuery} from '../ReduxTollKit/Stepney/stepneyUser';
 import {useNavigation} from '@react-navigation/native';
-
+import {removeStorageData} from '../Async/AsyncStorage';
+import {useDispatch} from 'react-redux';
+import {setToken} from '../ReduxTollKit/Slices/slice';
 const CustomDrawer = props => {
   const {data, error, isLoading} = useGetUserProfileQuery(null);
   // console.log('User profile', data);
   const navigation = useNavigation();
-  const handleLogout = () => {
-    console.warn('Log Out');
-  };
+  const dispatch = useDispatch();
   const gotoSetting = () => {
     navigation.navigate('SettingScreen');
   };
@@ -24,7 +24,12 @@ const CustomDrawer = props => {
       setUserProfile(data);
     }
   }, [data]);
+  const handleLogout = async () => {
+    console.log('DON');
 
+    await removeStorageData('userToken');
+    dispatch(setToken(false));
+  };
   return (
     <DrawerContentScrollView {...props} style={{backgroundColor: 'black'}}>
       <View style={{flex: 1, backgroundColor: 'black', position: 'relative'}}>
@@ -91,20 +96,19 @@ const CustomDrawer = props => {
       </View>
       <View
         style={{
-      alignSelf:'baseline',
-      bottom: 0,
-      width: '100%',
-      borderTopWidth: 1,
-      borderTopColor: '#919191',
-      borderBottomWidth: 1,
-      borderBottomColor: '#919191',
+          alignSelf: 'baseline',
+          bottom: 0,
+          width: '100%',
+          borderTopWidth: 1,
+          borderTopColor: '#919191',
+          borderBottomWidth: 1,
+          borderBottomColor: '#919191',
         }}>
         <Pressable
           onPress={handleLogout}
           style={{
             backgroundColor: '#EF5350',
             paddingVertical: 10,
-          
           }}>
           <Text style={{color: 'white', textAlign: 'center', fontSize: 16}}>
             Log Out

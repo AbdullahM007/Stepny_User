@@ -88,25 +88,13 @@ const RecentRidesScreen = () => {
     );
   };
 
-  const handleLogout = async () => {
-    console.log('DON');
-    // auth()
-    //   .signOut()
-    //   .then(async () => {
-    // User logged out successfully
-    await removeStorageData('userToken');
-    dispatch(setToken(false));
-    // dispatch(setUserId(''));
+  // const handleLogout = async () => {
+  //   console.log('DON');
 
-    // navigation.navigate('LogIn');
+  //   await removeStorageData('userToken');
+  //   dispatch(setToken(false));
 
-    // Alert.alert('Success', 'User logged out successfully!');
-    // })
-    // .catch(error => {
-    //   // Handle errors
-    //   Alert.alert('Error', error.message);
-    // });
-  };
+  // };
   return (
     // <ImageBackground source={require('../assets/Images/6.jpg')} style={styles.backgroundImage}>
     <View style={styles.container}>
@@ -120,9 +108,9 @@ const RecentRidesScreen = () => {
         onPress={() => setRecentRides([])}>
         <Text style={styles.buttonText}>Clear Recent Rides</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleLogout()}>
+      {/* <TouchableOpacity style={styles.button} onPress={() => handleLogout()}>
         <Text style={styles.buttonText}>LogOut</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
     // </ImageBackground>
   );

@@ -11,19 +11,20 @@ import {
 
 import PushNotification from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
-import {useSetDeviceTokenMutation} from '../../ReduxTollKit/Stepney/stepneyUser';
+import {
+  useSetDeviceTokenMutation,
+  useUpdateLocationMutation,
+  useGetAllFeedBackQuery,
+  useGetAllMechanicsQuery,
+  usePlaceOrderMutation,
+} from '../../ReduxTollKit/Stepney/stepneyUser';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import {usePlaceOrderMutation} from '../../ReduxTollKit/Stepney/stepneyUser';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import cars from '../../assets/data/cars';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  useGetAllFeedBackQuery,
-  useGetAllMechanicsQuery,
-} from '../../ReduxTollKit/Stepney/stepneyUser';
 import {
   setLAtitude,
   setLocation,
@@ -318,7 +319,7 @@ export const HomeMap = props => {
 
           {AllMechanics?.map(item => (
             <Marker
-            key={item.id} 
+              key={item.id}
               coordinate={{latitude: item.latitude, longitude: item.longitude}}
               onPress={() => handleMarkerPress(item)} // Add onPress event
             >

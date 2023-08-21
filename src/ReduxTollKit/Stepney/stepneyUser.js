@@ -78,6 +78,19 @@ export const stepneyUserDetailsApi = createApi({
         };
       },
     }),
+    updateLocation: builder.mutation({
+      // note: an optional `queryFn` may be used in place of `query`
+      query: body => {
+        // console.log('ERRRODATE', body);
+        return {
+          url: `/setlocation/`,
+          method: 'PUT',
+          body: body,
+          // headers: {'Content-Type': 'application/json'},
+          providesTags: ['userData'],
+        };
+      },
+    }),
     getAllMechanics: builder.query({
       query: () => `/findmechanics/${'Gujrat'}`,
       invalidatesTags: ['userData'],
@@ -105,6 +118,7 @@ export const {
   useGetAllFeedBackQuery,
   useForgotPasswordMutation,
   useGetUserProfileQuery,
+  useUpdateLocationMutation,
   usePlaceOrderMutation,
   useGetallOrdersQuery,
   useSetDeviceTokenMutation,
