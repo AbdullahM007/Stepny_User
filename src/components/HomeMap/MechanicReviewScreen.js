@@ -130,8 +130,8 @@ const MechanicReviewScreen = () => {
             <View style={styles.starContainer}>{renderStars(item.rating)}</View>
           </View> */}
           <View style={styles.ratingContainer}>
-            <Text style={styles.ratingLabel}>Order Date:</Text>
-            <Text>{moment(item?.created_at).format('DD-MM-YYYY')}</Text>
+            <Text style={styles.DateLabel}>Order Date:</Text>
+            <Text style={styles.Date}>{moment(item?.created_at).format('DD-MM-YYYY')}</Text>
           </View>
           {/* <View style={styles.ratingContainer}>
             <Text style={styles.ratingLabel}>End Date:</Text>
@@ -221,9 +221,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  ratingLabel: {
+  DateLabel: {
     fontSize: 16,
     color: 'orange',
+    marginRight: 4,
+  },
+  Date: {
+    fontSize: 16,
+    color: 'black',
     marginRight: 4,
   },
   starContainer: {
