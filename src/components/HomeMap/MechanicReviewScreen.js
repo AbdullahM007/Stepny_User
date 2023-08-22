@@ -125,12 +125,12 @@ const MechanicReviewScreen = () => {
             style={styles.locationText}>{`From: ${item.startLocation}`}</Text>
           <Text style={styles.locationText}>{`To: ${item.endLocation}`}</Text> */}
           <Text style={styles.fareText}>{`Status: ${item.status}`}</Text>
-          {/* <View style={styles.ratingContainer}>
+          <View style={styles.ratingContainer}>
             <Text style={styles.ratingLabel}>Rating:</Text>
             <View style={styles.starContainer}>{renderStars(item.rating)}</View>
-          </View> */}
+          </View>
           <View style={styles.ratingContainer}>
-            <Text style={styles.ratingLabel}>Order Date:</Text>
+            <Text style={styles.DateLabel}>Order Date:</Text>
             <Text>{moment(item?.created_at).format('DD-MM-YYYY')}</Text>
           </View>
           {/* <View style={styles.ratingContainer}>
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   feedbackText: {
     fontSize: 16,
-    color: 'white',
+    color: 'black',
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -224,6 +224,11 @@ const styles = StyleSheet.create({
   ratingLabel: {
     fontSize: 16,
     color: 'orange',
+    marginRight: 4,
+  },
+  DateLabel: {
+    fontSize: 16,
+    color: 'red',
     marginRight: 4,
   },
   starContainer: {
