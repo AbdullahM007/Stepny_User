@@ -41,7 +41,7 @@ const SignUpScreen = () => {
   useEffect(() => {
     if (data && email) {
       console.log('DAtaad', data, email);
-      navigation.navigate('OTPScreen', {data: data, email: email});
+      navigation.navigate('OTPScreen', {data: data, email:phoneCountryCode+phoneNumber});
     } else if (
       error?.data?.email[0] === 'user with this email already exists.'
     ) {
@@ -61,8 +61,8 @@ const SignUpScreen = () => {
       !confirmPassword ||
       !phoneNumber ||
       !phoneCountryCode ||
-      !city ||
-      !address
+      !city 
+      // !address
     ) {
       alert('Please fill in all the fields.');
       return;
@@ -73,7 +73,7 @@ const SignUpScreen = () => {
       alert('Passwords do not match.');
       return;
     }
-    signUpUser({
+    let body={
       email: email,
       first_name: firstName,
       last_name: lastName,
@@ -81,10 +81,11 @@ const SignUpScreen = () => {
       confirm_password: confirmPassword,
       contact: phoneCountryCode + phoneNumber,
       city: city,
-      address: address,
+      // address: address,
       latitude: '234',
       longitude: '2464',
-    });
+    }
+    signUpUser(body);
     // Example: Navigate to HomeScreen after successful sign-up
   };
   const Cities = [
@@ -156,7 +157,7 @@ const SignUpScreen = () => {
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder="Address"
         placeholderTextColor={'black'}
@@ -164,7 +165,7 @@ const SignUpScreen = () => {
         onChangeText={text => setAddress(text)}
         keyboardType="email-address"
         autoCapitalize="none"
-      />
+      /> */}
       <TextInput
         style={styles.input}
         placeholder="Password"

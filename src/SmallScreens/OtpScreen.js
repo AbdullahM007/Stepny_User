@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import OtpInputs from 'react-native-otp-inputs';
 import {useDispatch} from 'react-redux';
 import {storeData} from '../Async/AsyncStorage';
+import { setToken } from '../ReduxTollKit/Slices/slice';
 const OTPScreen = ({route}) => {
   const dispatch = useDispatch();
   const [
@@ -40,22 +41,24 @@ const OTPScreen = ({route}) => {
 
   const handleVerifyOTP = () => {
     if (otp) {
-      otpConfirmation({email: otpValue?.email, otp: parseInt(otp)});
+      otpConfirmation({email: otpValue?.email, otp: parseInt(otp)}).then((res)=>{
+        console.log('object',res)
+      });
     }
     // Implement the logic for verifying the OTP here
     console.log('Verifying OTP:', otp);
     // Add your logic to validate the OTP and navigate to the next screen if it's correct
   };
-  React.useEffect(() => {
-    if (data) {
-      // storeData('userToken', JSON.stringify(data?.token?.access_token));
-      // dispatch(setToken());
-      // navigation.navigate('RootNavigator');
-    } else {
-      Alert.alert('', 'Invalid otp');
-    }
-  }, [data, error]);
-  console.log('DFASDFASD', data, error, otp);
+  // React.useEffect(() => {
+  //   if (data) {
+  //     // storeData('userToken', JSON.stringify(data?.token?.access_token));
+  //     dispatch(setToken(true));
+  //     // navigation.navigate('RootNavigator');
+  //   } else if(error) {
+  //     Alert.alert('', 'Invalid otp');
+  //   }
+  // }, [data, error]);
+  // console.log('DFASDFASD', data, error, otp);
 
   return (
     <View style={styles.container}>

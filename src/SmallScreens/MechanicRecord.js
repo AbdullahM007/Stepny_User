@@ -7,47 +7,51 @@ import {
   TouchableOpacity,
   Animated,
   ImageBackground,
+  Image,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {removeStorageData} from '../Async/AsyncStorage';
-import {useDispatch} from 'react-redux';
-import {setToken} from '../ReduxTollKit/Slices/slice';
-import {useGetallOrdersQuery} from '../ReduxTollKit/Stepney/stepneyUser';
+import moment from 'moment';
+
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useGetallOrdersQuery } from '../ReduxTollKit/Stepney/stepneyUser';
 const RecentRidesScreen = () => {
   const {data, error, isLoading} = useGetallOrdersQuery();
-  const [allOrders, setAllOrders] = useState();
-  console.log('RecentRidesScreen', JSON.stringify(data));
-  useEffect(() => {
+  // Sample data for recent rides
+  const [recents, setRecents] = React.useState();
+  React.useEffect(() => {
     if (data) {
-      setAllOrders(data?.orders);
+      setRecents(data?.orders);
     }
   }, [data]);
-
-  // Sample data for recent rides
-  const dispatch = useDispatch();
+  console.log('data', JSON.stringify(data));
   const [recentRides, setRecentRides] = useState([
     {
       id: '1',
       date: '2023-07-20',
-      MechanicName: 'Abdullah',
-      Service: 'Mechanic',
+      startLocation: 'Location A',
+      endLocation: 'Location B',
       fare: '1500 Rs',
+      rating: 4,
+      feedback: 'Great ride!',
     },
     {
       id: '2',
       date: '2023-07-18',
-      MechanicName: 'Usama',
-      Service: 'Electrician',
+      startLocation: 'Location C',
+      endLocation: 'Location D',
       fare: '1200 Rs',
+      rating: 5,
+      feedback: 'Excellent service!',
     },
     {
       id: '3',
       date: '2023-07-16',
-      MechanicName: 'Hamza',
-      Service: 'Car Tower',
+      startLocation: 'Location E',
+      endLocation: 'Location F',
       fare: '2000 Rs',
+      rating: 3,
+      feedback: 'Could be better.',
     },
-    // Add more recent rides data as needed
   ]);
 
   const bounceValue = useRef(new Animated.Value(-100)).current;
@@ -70,6 +74,44 @@ const RecentRidesScreen = () => {
     }).start();
   };
 
+  const renderStars = rating => {
+    const filledStars = Math.floor(rating);
+    const halfStars = Math.ceil(rating - filledStars);
+    const emptyStars = 5 - filledStars - halfStars;
+
+    const stars = [];
+
+    for (let i = 0; i < filledStars; i++) {
+      stars.push(
+        <MaterialCommunityIcons key={i} name="star" size={20} color="gold" />,
+      );
+    }
+
+    if (halfStars > 0) {
+      stars.push(
+        <MaterialCommunityIcons
+          key="half"
+          name="star-half"
+          size={20}
+          color="gold"
+        />,
+      );
+    }
+
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <MaterialCommunityIcons
+          key={`empty-${i}`}
+          name="star-outline"
+          size={20}
+          color="gold"
+        />,
+      );
+    }
+
+    return stars;
+  };
+
   const renderRecentRideItem = ({item}) => {
     const animatedStyle = {
       transform: [{translateX: bounceValue}],
@@ -78,41 +120,49 @@ const RecentRidesScreen = () => {
     return (
       <TouchableOpacity onPress={startBounceInAnimation}>
         <Animated.View style={[styles.rideItemContainer, animatedStyle]}>
+          <Text>Order Details</Text>
+
           <Text style={styles.dateText}>{item.date}</Text>
+          {/* <Text
+            style={styles.locationText}>{`From: ${item.startLocation}`}</Text>
+          <Text style={styles.locationText}>{`To: ${item.endLocation}`}</Text> */}
+          <Text style={styles.fareText}>{`Status: ${item.status}`}</Text>
+          {/* <View style={styles.ratingContainer}>
+            <Text style={styles.ratingLabel}>Rating:</Text>
+            <View style={styles.starContainer}>{renderStars(item.rating)}</View>
+          </View> */}
+          <View style={styles.ratingContainer}>
+            <Text style={styles.ratingLabel}>Order Date:</Text>
+            <Text>{moment(item?.created_at).format('DD-MM-YYYY')}</Text>
+          </View>
+          {/* <View style={styles.ratingContainer}>
+            <Text style={styles.ratingLabel}>End Date:</Text>
+            <Text>{moment(item?.updated_at).format('DD-MM-YYYY')}</Text>
+          </View> */}
           <Text
-            style={styles.MechanicName}>{`Name: ${item.MechanicName}`}</Text>
-          <Text style={styles.Service}>{`Service: ${item.Service}`}</Text>
-          <Text style={styles.fareText}>{`Paid: ${item.fare}`}</Text>
+            style={styles.feedbackText}>{`Feedback: ${item.feedback}`}</Text>
         </Animated.View>
       </TouchableOpacity>
     );
   };
 
-  // const handleLogout = async () => {
-  //   console.log('DON');
-
-  //   await removeStorageData('userToken');
-  //   dispatch(setToken(false));
-
-  // };
   return (
-    // <ImageBackground source={require('../assets/Images/6.jpg')} style={styles.backgroundImage}>
-    <View style={styles.container}>
-      <FlatList
-        data={allOrders}
-        renderItem={renderRecentRideItem}
-        keyExtractor={item => item.id}
-      />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => setRecentRides([])}>
-        <Text style={styles.buttonText}>Clear Recent Rides</Text>
-      </TouchableOpacity>
-      {/* <TouchableOpacity style={styles.button} onPress={() => handleLogout()}>
-        <Text style={styles.buttonText}>LogOut</Text>
-      </TouchableOpacity> */}
-    </View>
-    // </ImageBackground>
+    <ImageBackground
+      source={require('../assets/Images/8.jpg')}
+      style={styles.backgroundImage}>
+      <View style={styles.container}>
+        <FlatList
+          data={recents}
+          renderItem={renderRecentRideItem}
+          keyExtractor={item => item.id}
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setRecentRides([])}>
+          <Text style={styles.buttonText}>Clear Recent Rides</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -125,27 +175,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: 'white',
   },
   rideItemContainer: {
-    backgroundColor: 'lightgray',
+    backgroundColor: 'white',
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
   },
   dateText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
     color: 'black',
   },
-  MechanicName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    color: 'red',
-  },
-  Service: {
+  locationText: {
     fontSize: 16,
     marginBottom: 4,
     color: 'black',
@@ -155,7 +198,7 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   button: {
-    backgroundColor: 'red',
+    backgroundColor: 'blue',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
@@ -166,6 +209,32 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  ratingText: {
+    fontSize: 16,
+    color: 'orange',
+  },
+  feedbackText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  ratingLabel: {
+    fontSize: 16,
+    color: 'orange',
+    marginRight: 4,
+  },
+  starContainer: {
+    flexDirection: 'row',
+  },
+  starIcon: {
+    width: 16, // Adjust the width and height as needed for your star icons
+    height: 16,
+    marginRight: 4,
   },
 });
 

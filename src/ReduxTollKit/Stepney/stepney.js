@@ -35,7 +35,7 @@ export const stepneyApi = createApi({
     }),
     otpConfirmation: builder.mutation({
       // note: an optional `queryFn` may be used in place of `query`
-      query: body => {
+      query: (body) => {
         return {
           url: `/customersignup/`,
           method: 'PUT',
