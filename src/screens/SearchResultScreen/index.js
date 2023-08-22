@@ -1,12 +1,13 @@
-import { View, Text, Dimensions, Alert, TextInput, TouchableOpacity,StyleSheet } from 'react-native';
+import { View, Text, Dimensions, Alert, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import HomeMap from '../../components/HomeMap';
 import OurServices from '../../components/OurServices';
 import RouteMap from '../../components/RouteMap';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { useCompleteOrderMutation ,useFeedBackMutation} from '../../ReduxTollKit/Stepney/stepneyUser';
+import { useCompleteOrderMutation, useFeedBackMutation } from '../../ReduxTollKit/Stepney/stepneyUser';
 import OrderScreen from '../OrderScreen';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const SearchResultScreen = (props) => {
   const typeState = useState(null);
@@ -47,15 +48,13 @@ navigation.navigate('Home')
   };
 
   const onSubmitSecondPopup = () => {
-    // Perform the actual order completion logic and submit to the server
-    // Use the rating, description, and charges values in this function
+   
     feedback({
       mechanic:3,
       rating: rating,
       service_details:description,
       charges:charges,
     })
-    // For example:
     const orderData = {
       userId: UserId,
       rating: rating,
@@ -65,11 +64,14 @@ navigation.navigate('Home')
 
     completeOrder(orderData);
     setShowSecondPopup(false);
-    // Additional logic or navigation can be added here
   };
 
   const { originLocation, destinationPlace } = route.params;
 console.log(charges);
+
+
+
+
   return (
     <View style={{ display: 'flex', justifyContent: 'space-between' }}>
       {
@@ -78,6 +80,25 @@ console.log(charges);
         </View>
       }
       <OurServices typeState={typeState} onSubmit={onSubmitFirstPopup} />
+
+      <TouchableOpacity
+        style={[styles.sosButton, { backgroundColor: 'red' }]}
+        onPress={() => {
+          // Handle your SoS logic here
+        }}
+      >
+        <View style={styles.sosButtonContent}>
+          <Text style={styles.sosButtonText}>SoS</Text>
+          <FontAwesome name="exclamation-circle" size={30} color="white" />
+        </View>
+      </TouchableOpacity>
+
+      <View style={styles.instructionsContainer}>
+        <Text style={styles.instructionsText}>
+          SoS: Press only in case of Emergency such as Police case e.t.c .
+        </Text>
+      </View>
+
 
       {showSecondPopup && (
         <View
@@ -97,7 +118,7 @@ console.log(charges);
               backgroundColor: 'white',
               padding: 20,
               borderRadius: 10,
-              width: '80%', // Adjust the width as needed
+              width: '80%', 
             }}
           >
             {/* Rating */}
@@ -107,14 +128,10 @@ console.log(charges);
               placeholder="Enter rating (0-10)"
               value={rating}
               onChangeText={(text) => {setRating(text)
-                // Ensure only numbers between 0 and 10 are entered
-              //   const numericValue = parseFloat(text);
-              //   if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 10) {
-              //     setRating(numericValue.toString());
-              //   }
+                
               }
             }
-              keyboardType="numeric" // This restricts input to numbers
+              keyboardType="numeric" 
             />
 
             {/* Description */}
@@ -134,13 +151,9 @@ console.log(charges);
               placeholder="Enter charges"
               value={charges}
               onChangeText={(text) => {setCharges(text)
-                // Ensure only numeric values are entered
-                // const numericValue = parseFloat(text);
-                // if (!isNaN(numericValue)) {
-                //   setCharges(numericValue.toString());
-                // }
+               
               }}
-              keyboardType="numeric" // This restricts input to numbers
+              keyboardType="numeric"
             />
 
             {/* Submit */}
@@ -168,6 +181,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     marginTop: 15,
+  },
+
+  sosButton: {
+    position: 'relative',
+    alignSelf: 'center',
+    padding: 10,
+    borderRadius: 50,
+    paddingHorizontal:20,
+    marginTop:70,
+    // right: 15,
+  },
+  sosButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize:25,
+    marginRight:5
+  },
+  sosButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  instructionsContainer: {
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  instructionsText: {
+    textAlign: 'center',
+    color: 'red',
+    fontStyle: 'italic',
   },
 });
 
