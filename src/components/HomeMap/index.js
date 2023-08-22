@@ -363,6 +363,16 @@ export const HomeMap = props => {
       {/* Add the popup to display marker details */}
       {selectedMarker && (
         <View style={styles.markerPopup}>
+          <Pressable style={styles.closeIconContainer}>
+    <Ionicons
+      name="close-outline"
+      size={24}
+      color="black"
+      onPress={() => {
+        // Handle closing the popup
+      }}
+    />
+  </Pressable>
           <View style={styles.profileHeader}>
             {/* <Image source={selectedMarker.image} style={styles.profileImage} /> */}
             <FontAwesome name="user-circle" size={100} color="blue" />
@@ -395,6 +405,7 @@ export const HomeMap = props => {
                     borderRadius: 10,
                     padding: 2,
                     marginBottom: 10,
+                    color:'black'
                   }}>
                   <Ionicons name="information-circle" size={18} color="blue" />
                   Review
@@ -443,6 +454,7 @@ const styles = StyleSheet.create({
     bottom: 92,
     left: 10,
     right: 10,
+    height:'20%',
     backgroundColor: '#008080',
     padding: 10,
     borderRadius: 10,
@@ -454,16 +466,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   profileImage: {
-    width: 80,
-    height: 80,
+    width: 50,
+    height: 50,
     borderRadius: 40,
-    marginRight: 10,
   },
   profileInfo: {
     flex: 1,
   },
   profileName: {
-    fontSize: 14,
+    fontSize: 17,
     fontWeight: 'bold',
     color: 'white',
   },
@@ -497,6 +508,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  closeIconContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 10,
+    zIndex: 1,
+  }
 });
 
 export default HomeMap;

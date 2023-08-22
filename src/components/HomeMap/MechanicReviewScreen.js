@@ -154,11 +154,11 @@ const MechanicReviewScreen = () => {
           renderItem={renderRecentRideItem}
           keyExtractor={item => item.id}
         />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.button}
           onPress={() => setRecentRides([])}>
           <Text style={styles.buttonText}>Clear Recent Rides</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </ImageBackground>
   );
