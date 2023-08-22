@@ -37,7 +37,7 @@ export const HomeMap = props => {
     placeOrder,
     {data: placeOrderData, isLoading: orderLoading, error: orderERROR},
   ] = usePlaceOrderMutation();
-  console.log('placeOrderData', placeOrderData, 'orderERROR', orderERROR);
+  // console.log('placeOrderData', placeOrderData, 'orderERROR', orderERROR);
 
   const dispatch = useDispatch();
   const [granted, setGranted] = useState(false);
@@ -49,7 +49,7 @@ export const HomeMap = props => {
   const [setDeviceToken, {data: DeviceToken, error: TokenError}] =
     useSetDeviceTokenMutation();
 
-  console.log('userId: ', UserId);
+  // console.log('userId: ', UserId);
   useEffect(() => {
     if (!notificationToken) return;
     SendNotificationstoServer();
@@ -140,6 +140,7 @@ export const HomeMap = props => {
     data: AllMechanics,
     error: mechanicError,
     isLoading: MechanicLoading,
+    refetch,
   } = useGetAllMechanicsQuery();
   const [userId, setuserId] = useState();
   const {
@@ -150,7 +151,7 @@ export const HomeMap = props => {
   const [originLocation, setUserLocation] = useState({lat: 0, lon: 0});
   console.log('DeviceToken', DeviceToken, JSON.stringify(TokenError));
   const {data: allOrder, error: orderError} = useGetallOrdersQuery();
-  console.log('location', allOrder);
+  // console.log('location', allOrder);
   const navigation = useNavigation();
   const handleHireButtonPress = () => {
     // Navigate to the desired screen here
@@ -309,6 +310,17 @@ export const HomeMap = props => {
   const handleHire = item => {
     placeOrder({mechanic_id: item});
   };
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // Call the refetch function after 5 seconds
+      console.log('called');
+      refetch();
+    }, 3000); // 5000 milliseconds = 5 seconds
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [refetch]);
   return (
     <View>
       {location && (
@@ -414,8 +426,7 @@ export const HomeMap = props => {
               // selectedMarker?.status === false?
               handleHire(selectedMarker?.id);
               handleTrackeUSer();
-            }
-            }>
+            }}>
             <Text style={styles.hireButtonText}>Hire?</Text>
           </Pressable>
         </View>
