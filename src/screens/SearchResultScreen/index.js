@@ -1,38 +1,53 @@
-import { View, Text, Dimensions, Alert, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  Dimensions,
+  Alert,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+import React, {useState} from 'react';
 import HomeMap from '../../components/HomeMap';
 import OurServices from '../../components/OurServices';
 import RouteMap from '../../components/RouteMap';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { useCompleteOrderMutation, useFeedBackMutation } from '../../ReduxTollKit/Stepney/stepneyUser';
+import {useRoute, useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {
+  useCompleteOrderMutation,
+  useFeedBackMutation,
+  useSosAlertMutation,
+} from '../../ReduxTollKit/Stepney/stepneyUser';
 import OrderScreen from '../OrderScreen';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-const SearchResultScreen = (props) => {
+const SearchResultScreen = props => {
   const typeState = useState(null);
-  const UserId = useSelector((state) => state.useData.userId);
+  const UserId = useSelector(state => state.useData.userId);
   console.log(UserId);
   const route = useRoute();
   const navigation = useNavigation();
-  const [completeOrder, { data, error }] = useCompleteOrderMutation();
+  const [completeOrder, {data, error}] = useCompleteOrderMutation();
   console.log('DATA', data, error);
-const [feedback,{data:feedBackData,error:feedbackError}]=useFeedBackMutation()
-console.log("feedBackData",feedBackData,feedbackError);
+  const [feedback, {data: feedBackData, error: feedbackError}] =
+    useFeedBackMutation();
+  console.log('feedBackData', feedBackData, feedbackError);
   const [showSecondPopup, setShowSecondPopup] = useState(false);
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState('');
   const [charges, setCharges] = useState('');
-React.useEffect(() => {
-  if(data){
-    setShowSecondPopup(true);
-  }
-}, [data])
-React.useEffect(()=>{
-  if(feedBackData){
-navigation.navigate('Home')
-  }
-},[feedBackData])
+  const [sosAlert, {data: sosData, error: sosError}] = useSosAlertMutation();
+  console.log('sosData', sosData, sosError);
+  React.useEffect(() => {
+    if (data) {
+      setShowSecondPopup(true);
+    }
+  }, [data]);
+  React.useEffect(() => {
+    if (feedBackData) {
+      navigation.navigate('Home');
+    }
+  }, [feedBackData]);
   const onSubmitFirstPopup = () => {
     Alert.alert('', 'Are You Sure Your order is Completed ?', [
       {
@@ -41,20 +56,19 @@ navigation.navigate('Home')
       {
         text: 'ok',
         onPress: () => {
-          completeOrder({id:UserId})
+          completeOrder({id: UserId});
         },
       },
     ]);
   };
 
   const onSubmitSecondPopup = () => {
-   
     feedback({
-      mechanic:3,
+      mechanic: 3,
       rating: rating,
-      service_details:description,
-      charges:charges,
-    })
+      service_details: description,
+      charges: charges,
+    });
     const orderData = {
       userId: UserId,
       rating: rating,
@@ -66,14 +80,11 @@ navigation.navigate('Home')
     setShowSecondPopup(false);
   };
 
-  const { originLocation, destinationPlace } = route.params;
-console.log(charges);
-
-
-
+  const {originLocation, destinationPlace} = route.params;
+  console.log(charges);
 
   return (
-    <View style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <View style={{display: 'flex', justifyContent: 'space-between'}}>
       {
         <View style={{height: Dimensions.get('window').height - 400}}>
           <RouteMap origin={originLocation} destination={destinationPlace} />
@@ -82,11 +93,10 @@ console.log(charges);
       <OurServices typeState={typeState} onSubmit={onSubmitFirstPopup} />
 
       <TouchableOpacity
-        style={[styles.sosButton, { backgroundColor: 'red' }]}
+        style={[styles.sosButton, {backgroundColor: 'red'}]}
         onPress={() => {
-          // Handle your SoS logic here
-        }}
-      >
+          sosAlert();
+        }}>
         <View style={styles.sosButtonContent}>
           <Text style={styles.sosButtonText}>SoS</Text>
           <FontAwesome name="exclamation-circle" size={30} color="white" />
@@ -99,7 +109,6 @@ console.log(charges);
         </Text>
       </View>
 
-
       {showSecondPopup && (
         <View
           style={{
@@ -111,54 +120,53 @@ console.log(charges);
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             justifyContent: 'center',
             alignItems: 'center',
-          }}
-        >
+          }}>
           <View
             style={{
               backgroundColor: 'white',
               padding: 20,
               borderRadius: 10,
-              width: '80%', 
-            }}
-          >
+              width: '80%',
+            }}>
             {/* Rating */}
-            <Text style={{ marginBottom: 5 }}>Rating:</Text>
+            <Text style={{marginBottom: 5}}>Rating:</Text>
             <TextInput
               style={styles.input}
               placeholder="Enter rating (0-10)"
               value={rating}
-              onChangeText={(text) => {setRating(text)
-                
-              }
-            }
-              keyboardType="numeric" 
+              onChangeText={text => {
+                setRating(text);
+              }}
+              keyboardType="numeric"
             />
 
             {/* Description */}
-            <Text style={{ marginBottom: 5 }}>Description:</Text>
+            <Text style={{marginBottom: 5}}>Description:</Text>
             <TextInput
-              style={[styles.input, { height: 100 }]}
+              style={[styles.input, {height: 100}]}
               placeholder="Enter description"
               multiline
               value={description}
-              onChangeText={(text) => setDescription(text)}
+              onChangeText={text => setDescription(text)}
             />
 
             {/* Charges */}
-            <Text style={{ marginBottom: 5 }}>Charges:</Text>
+            <Text style={{marginBottom: 5}}>Charges:</Text>
             <TextInput
               style={styles.input}
               placeholder="Enter charges"
               value={charges}
-              onChangeText={(text) => {setCharges(text)
-               
+              onChangeText={text => {
+                setCharges(text);
               }}
               keyboardType="numeric"
             />
 
             {/* Submit */}
-            <TouchableOpacity style={styles.submitButton} onPress={onSubmitSecondPopup}>
-              <Text style={{ color: 'white' }}>Submit</Text>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={onSubmitSecondPopup}>
+              <Text style={{color: 'white'}}>Submit</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -188,15 +196,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 10,
     borderRadius: 50,
-    paddingHorizontal:20,
-    marginTop:70,
+    paddingHorizontal: 20,
+    marginTop: 70,
     // right: 15,
   },
   sosButtonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize:25,
-    marginRight:5
+    fontSize: 25,
+    marginRight: 5,
   },
   sosButtonContent: {
     flexDirection: 'row',

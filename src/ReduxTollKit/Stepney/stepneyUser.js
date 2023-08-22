@@ -53,7 +53,7 @@ export const stepneyUserDetailsApi = createApi({
     }),
     feedBack: builder.mutation({
       // note: an optional `queryFn` may be used in place of `query`
-      query: (body) => {
+      query: body => {
         console.log('ERRRODATE', body);
         return {
           url: `/feedback/`,
@@ -67,7 +67,7 @@ export const stepneyUserDetailsApi = createApi({
     }),
     completeOrder: builder.mutation({
       // note: an optional `queryFn` may be used in place of `query`
-      query: (body) => {
+      query: body => {
         console.log('ERRRODATE', body);
         return {
           url: `/ordercomplete/`,
@@ -85,6 +85,20 @@ export const stepneyUserDetailsApi = createApi({
         // console.log('ERRRODATE', body);
         return {
           url: `/order/`,
+          method: 'POST',
+          body: body,
+          providesTags: ['userData'],
+
+          // headers: {'Content-Type': 'application/json'},
+        };
+      },
+    }),
+    sosAlert: builder.mutation({
+      // note: an optional `queryFn` may be used in place of `query`
+      query: body => {
+        // console.log('ERRRODATE', body);
+        return {
+          url: `/alert/`,
           method: 'POST',
           body: body,
           providesTags: ['userData'],
@@ -151,5 +165,6 @@ export const {
   useGetallOrdersQuery,
   useSetDeviceTokenMutation,
   useFeedBackMutation,
+  useSosAlertMutation,
   useCompleteOrderMutation,
 } = stepneyUserDetailsApi;
