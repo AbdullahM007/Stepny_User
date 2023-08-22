@@ -38,7 +38,7 @@ export const HomeMap = props => {
     {data: placeOrderData, isLoading: orderLoading, error: orderERROR},
   ] = usePlaceOrderMutation();
   // console.log('placeOrderData', placeOrderData, 'orderERROR', orderERROR);
-
+  const [showData, setshowData] = useState(false);
   const dispatch = useDispatch();
   const [granted, setGranted] = useState(false);
   const latitude = useSelector(state => state.useData.lat);
@@ -272,10 +272,16 @@ export const HomeMap = props => {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const handleMarkerPress = marker => {
+    setshowData(true);
     setSelectedMarker(marker);
   };
   const handleNext = item => {
     setuserId(item);
+    if (allFeedBack) {
+      navigation.navigate('MechanicReviewScreen', {
+        mechaData: allFeedBack,
+      });
+    }
   };
   const [destinationPlace, setdestinationPlace] = useState();
 
@@ -321,6 +327,7 @@ export const HomeMap = props => {
       clearInterval(timer);
     };
   }, [refetch]);
+  // console.log('AllMechanics', selectedMarker?.profile_picture);
   return (
     <View>
       {location && (
@@ -353,30 +360,42 @@ export const HomeMap = props => {
                   width: 50,
                   height: 50,
                 }}
+                source={require('../../assets/Images/Mechanic-car.png')}
                 resizeMode="center"
-                source={require('../../assets/Images/electric-car.png')}
               />
             </Marker>
           ))}
         </MapView>
       )}
       {/* Add the popup to display marker details */}
-      {selectedMarker && (
+      {selectedMarker && showData && (
         <View style={styles.markerPopup}>
           <Pressable style={styles.closeIconContainer}>
-    <Ionicons
-      name="close-outline"
-      size={24}
-      color="black"
-      onPress={() => {
-        // Handle closing the popup
-      }}
-    />
-  </Pressable>
+            <Ionicons
+              name="close-outline"
+              size={24}
+              color="black"
+              onPress={() => {
+                setshowData(false);
+              }}
+            />
+          </Pressable>
           <View style={styles.profileHeader}>
-            {/* <Image source={selectedMarker.image} style={styles.profileImage} /> */}
-            <FontAwesome name="user-circle" size={100} color="blue" />
-
+            {selectedMarker?.profile_picture ? (
+              <Image
+                style={{
+                  width: 90,
+                  height: 90,
+                  borderRadius: 300,
+                  marginRight: 10,
+                }}
+                source={{
+                  uri: `data:image/png;base64,${selectedMarker?.profile_picture}`,
+                }}
+              />
+            ) : (
+              <FontAwesome name="user-circle" size={100} color="blue" />
+            )}
             <View style={styles.profileInfo}>
               <Text style={[styles.profileName, styles.selectedMarkerName]}>
                 Name: {selectedMarker?.Name}
@@ -405,7 +424,7 @@ export const HomeMap = props => {
                     borderRadius: 10,
                     padding: 2,
                     marginBottom: 10,
-                    color:'black'
+                    color: 'black',
                   }}>
                   <Ionicons name="information-circle" size={18} color="blue" />
                   Review
@@ -454,7 +473,7 @@ const styles = StyleSheet.create({
     bottom: 92,
     left: 10,
     right: 10,
-    height:'20%',
+    height: '20%',
     backgroundColor: '#008080',
     padding: 10,
     borderRadius: 10,
@@ -513,7 +532,7 @@ const styles = StyleSheet.create({
     top: 0,
     right: 10,
     zIndex: 1,
-  }
+  },
 });
 
 export default HomeMap;
