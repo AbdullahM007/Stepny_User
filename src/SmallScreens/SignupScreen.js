@@ -9,6 +9,7 @@ import {
   Platform,
   Image,
   Alert,
+  ScrollView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
@@ -41,7 +42,7 @@ const SignUpScreen = () => {
   useEffect(() => {
     if (data && email) {
       console.log('DAtaad', data, email);
-      navigation.navigate('OTPScreen', {data: data, email:phoneCountryCode+phoneNumber});
+      navigation.navigate('OTPScreen', {data: data, email: email});
     } else if (
       error?.data?.email[0] === 'user with this email already exists.'
     ) {
@@ -61,8 +62,7 @@ const SignUpScreen = () => {
       !confirmPassword ||
       !phoneNumber ||
       !phoneCountryCode ||
-      !city 
-      // !address
+      !city
     ) {
       alert('Please fill in all the fields.');
       return;
@@ -73,7 +73,7 @@ const SignUpScreen = () => {
       alert('Passwords do not match.');
       return;
     }
-    let body={
+    let body = {
       email: email,
       first_name: firstName,
       last_name: lastName,
@@ -84,7 +84,7 @@ const SignUpScreen = () => {
       // address: address,
       latitude: '234',
       longitude: '2464',
-    }
+    };
     signUpUser(body);
     // Example: Navigate to HomeScreen after successful sign-up
   };
@@ -94,6 +94,7 @@ const SignUpScreen = () => {
     {label: 'Gujrat', value: 'Gujrat'},
   ];
   const CountryCodes = [{label: '(+92)', value: '+92'}];
+  console.log('data', data);
   const renderItem = item => {
     return (
       <View style={styles.item}>
@@ -111,53 +112,54 @@ const SignUpScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
-      <Image
-        style={{
-          width: 100,
-          height: 100,
-          marginBottom: 20,
-          // borderRadius: 300,
-          resizeMode: 'cover',
-        }}
-        source={require('../assets/Images/electric-car.png')}
-      />
-      <Text
-        style={{
-          fontSize: 20,
-          fontWeight: 'bold',
-          alignSelf: 'flex-start',
-          marginLeft: 10,
-          marginBottom: 20,
-        }}>
-        Create Your Account
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        placeholderTextColor={'black'}
-        value={firstName}
-        onChangeText={text => setFirstName(text.replace(/[^a-zA-Z ]/g, ''))}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        placeholderTextColor={'black'}
-        value={lastName}
-        onChangeText={text => setLastName(text.replace(/[^a-zA-Z ]/g, ''))}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor={'black'}
-        value={email}
-        onChangeText={text => setEmail(text)}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      {/* <TextInput
+    <ScrollView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        <Image
+          style={{
+            width: 100,
+            height: 100,
+            marginBottom: 20,
+            // borderRadius: 300,
+            resizeMode: 'cover',
+          }}
+          source={require('../assets/Images/electric-car.png')}
+        />
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            alignSelf: 'flex-start',
+            marginLeft: 10,
+            marginBottom: 20,
+          }}>
+          Create Your Account
+        </Text>
+        <TextInput
+          style={styles.input}
+          placeholder="First Name"
+          placeholderTextColor={'black'}
+          value={firstName}
+          onChangeText={text => setFirstName(text.replace(/[^a-zA-Z ]/g, ''))}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Last Name"
+          placeholderTextColor={'black'}
+          value={lastName}
+          onChangeText={text => setLastName(text.replace(/[^a-zA-Z ]/g, ''))}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor={'black'}
+          value={email}
+          onChangeText={text => setEmail(text)}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        {/* <TextInput
         style={styles.input}
         placeholder="Address"
         placeholderTextColor={'black'}
@@ -166,24 +168,24 @@ const SignUpScreen = () => {
         keyboardType="email-address"
         autoCapitalize="none"
       /> */}
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={'black'}
-        secureTextEntry={true}
-        value={password}
-        onChangeText={text => setPassword(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        placeholderTextColor={'black'}
-        secureTextEntry={true}
-        value={confirmPassword}
-        onChangeText={text => setConfirmPassword(text)}
-      />
-      <View style={styles.phoneInputContainer}>
-        {/* <Picker
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor={'black'}
+          secureTextEntry={true}
+          value={password}
+          onChangeText={text => setPassword(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          placeholderTextColor={'black'}
+          secureTextEntry={true}
+          value={confirmPassword}
+          onChangeText={text => setConfirmPassword(text)}
+        />
+        <View style={styles.phoneInputContainer}>
+          {/* <Picker
     style={[styles.countryCode, { color: 'black' }]} 
     selectedValue={phoneCountryCode}
     placeholder="Ph"
@@ -193,66 +195,66 @@ const SignUpScreen = () => {
     <Picker.Item label="Select Country Code" value="" />
     <Picker.Item label="(+92)" value="+92" />
     {/* Add more country codes as needed */}
-        {/* </Picker> */}
+          {/* </Picker> */}
+          <Dropdown
+            style={styles.countryCode}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            data={CountryCodes}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Country code"
+            placeholderTextColor="black"
+            value={phoneCountryCode}
+            onChange={item => {
+              setPhoneCountryCode(item.value);
+            }}
+            renderItem={renderItem}
+          />
+
+          <TextInput
+            style={styles.phoneNumber}
+            placeholder="Phone Number"
+            placeholderTextColor={'black'}
+            value={phoneNumber}
+            onChangeText={text =>
+              setPhoneNumber(text.replace(/[^0-9]/g, '').substring(0, 10))
+            }
+            keyboardType="phone-pad"
+          />
+        </View>
         <Dropdown
-          style={styles.countryCode}
+          style={styles.dropdown}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
-          data={CountryCodes}
+          // iconStyle={styles.iconStyle}
+          data={Cities}
+          search
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder="Select Country code"
+          placeholder="Select City"
+          searchPlaceholder="Search..."
           placeholderTextColor="black"
-          value={phoneCountryCode}
+          value={city}
           onChange={item => {
-            setPhoneCountryCode(item.value);
+            setCity(item.value);
           }}
+          renderLeftIcon={() => (
+            <AntDesign
+              style={styles.icon}
+              color="black"
+              name="Safety"
+              size={20}
+            />
+          )}
           renderItem={renderItem}
         />
 
-        <TextInput
-          style={styles.phoneNumber}
-          placeholder="Phone Number"
-          placeholderTextColor={'black'}
-          value={phoneNumber}
-          onChangeText={text =>
-            setPhoneNumber(text.replace(/[^0-9]/g, '').substring(0, 10))
-          }
-          keyboardType="phone-pad"
-        />
-      </View>
-      <Dropdown
-        style={styles.dropdown}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.inputSearchStyle}
-        // iconStyle={styles.iconStyle}
-        data={Cities}
-        search
-        maxHeight={300}
-        labelField="label"
-        valueField="value"
-        placeholder="Select City"
-        searchPlaceholder="Search..."
-        placeholderTextColor="black"
-        value={city}
-        onChange={item => {
-          setCity(item.value);
-        }}
-        renderLeftIcon={() => (
-          <AntDesign
-            style={styles.icon}
-            color="black"
-            name="Safety"
-            size={20}
-          />
-        )}
-        renderItem={renderItem}
-      />
-
-      {/* <View style={styles.pickerContainer}>
+        {/* <View style={styles.pickerContainer}>
         <Picker
         placeholder="Phone Number"
         placeholderTextColor={'black'}
@@ -264,18 +266,19 @@ const SignUpScreen = () => {
           <Picker.Item label="Gujrat" value="Gujrat" />
           <Picker.Item label="Lahore" value="Lahore" />
           {/* Add more city options as needed */}
-      {/* </Picker>
+        {/* </Picker>
       </View> */}
 
-      <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.signInButton}
-        onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.buttonText}>Sign In</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+        <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.signInButton}
+          onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
@@ -289,7 +292,7 @@ const styles = StyleSheet.create({
   input: {
     width: '90%',
     height: 40,
-    color:'black',
+    color: 'black',
     borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 10,
@@ -339,7 +342,7 @@ const styles = StyleSheet.create({
   phoneNumber: {
     width: '70%',
     height: 40,
-    color:'black',
+    color: 'black',
     borderColor: '#ccc',
     borderWidth: 1,
     borderTopRightRadius: 10,

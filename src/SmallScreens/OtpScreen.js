@@ -12,13 +12,19 @@ import {useNavigation} from '@react-navigation/native';
 import OtpInputs from 'react-native-otp-inputs';
 import {useDispatch} from 'react-redux';
 import {storeData} from '../Async/AsyncStorage';
-import { setToken } from '../ReduxTollKit/Slices/slice';
+import {setToken} from '../ReduxTollKit/Slices/slice';
 const OTPScreen = ({route}) => {
   const dispatch = useDispatch();
   const [
     otpConfirmation, // This is the mutation trigger
     {data, error, isLoading: isUpdating}, // This is the destructured mutation result
   ] = useOtpConfirmationMutation();
+  React.useEffect(() => {
+    if (data) {
+      Alert.alert('Your Regester has successfully', 'Go to Log In to use');
+    }
+  }, [data]);
+
   const navigation = useNavigation();
   const [otp, setOtp] = useState(0);
   const otpValue = route?.params;
@@ -41,9 +47,11 @@ const OTPScreen = ({route}) => {
 
   const handleVerifyOTP = () => {
     if (otp) {
-      otpConfirmation({email: otpValue?.email, otp: parseInt(otp)}).then((res)=>{
-        console.log('object',res)
-      });
+      otpConfirmation({email: otpValue?.email, otp: parseInt(otp)}).then(
+        res => {
+          console.log('object', res);
+        },
+      );
     }
     // Implement the logic for verifying the OTP here
     console.log('Verifying OTP:', otp);
